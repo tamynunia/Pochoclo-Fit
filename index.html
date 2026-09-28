@@ -1,9 +1,3 @@
-<!-- 
-  ========================================================================
-  DERECHOS DE AUTOR Y PROPIEDAD INTELECTUAL
-  © 2026 Tamara Nunia. Reservados todos los derechos.
-  ========================================================================
--->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -612,4 +606,10 @@
           document.getElementById('ex-reps-input').value = '';
           document.getElementById('ex-series-input').value = '';
           document.getElementById('height-input').value = '';
-          document.getEl
+          document.getElementById('weight-input').value = '';
+          glassesState = [false, false, false, false, false, false, false, false];
+          selectedMood = '';
+
+          toggles.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) e
