@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pochoclo-Fit | Tamara Nunia</title>
+  <title>Pochoclo-Fit | by Tamy Nunia</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
@@ -47,14 +47,19 @@
 
     .brand {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
     }
 
     .brand-title {
-      font-size: 1.25rem;
-      font-weight: 700;
+      font-size: 1.3rem;
+      font-weight: 800;
       color: var(--primary);
+    }
+
+    .brand-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
     .badge {
@@ -266,6 +271,54 @@
       transition: opacity 0.2s;
     }
 
+    .btn-secondary {
+      background-color: var(--bg);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    /* ESTILOS PARA LA LISTA DE EJERCICIOS */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .exercise-item {
+      background-color: var(--bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .exercise-item.done span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .delete-ex-btn {
+      color: var(--accent-pink);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
     .mood-row {
       display: flex;
       justify-content: space-between;
@@ -308,8 +361,9 @@
   <header>
     <div class="brand">
       <div class="brand-title">🍿 Pochoclo-Fit</div>
-      <span class="badge">Reto Interactivo</span>
+      <div class="brand-subtitle">by Tamy Nunia</div>
     </div>
+    <span class="badge">Reto Interactivo</span>
   </header>
 
   <div class="dashboard-grid">
@@ -388,7 +442,7 @@
       <div class="card">
         <div class="card-header">🏋️‍♀️ Entrenamiento Hoy</div>
         <div class="input-group">
-          <label>Ejercicio Principal:</label>
+          <label>Ejercicio:</label>
           <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas / Cardio">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
@@ -401,6 +455,10 @@
             <input type="text" id="ex-reps-input" placeholder="Ej: 12">
           </div>
         </div>
+        <button class="btn-secondary" id="add-ex-btn">+ Agregar Ejercicio</button>
+        
+        <!-- Lista Desplegada de Ejercicios -->
+        <div class="exercise-list" id="exercise-list"></div>
       </div>
 
       <div class="card">
@@ -443,6 +501,7 @@
       let activeDay = 'Lunes';
       let glassesState = Array(8).fill(false);
       let selectedMood = '';
+      let exercisesList = [];
       let weeklyChart;
 
       const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -478,6 +537,40 @@
         document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(2)} L`;
       }
 
+      function renderExercises() {
+        const container = document.getElementById('exercise-list');
+        container.innerHTML = '';
+
+        exercisesList.forEach((ex, index) => {
+          const item = document.createElement('div');
+          item.className = 'exercise-item' + (ex.done ? ' done' : '');
+          
+          item.innerHTML = `
+            <span style="cursor: pointer;"><strong>${ex.name}</strong> (${ex.series} series x ${ex.reps})</span>
+            <div>
+              <button class="delete-ex-btn" data-index="${index}">✕</button>
+            </div>
+          `;
+
+          // Marcar como hecho al hacer clic en el texto
+          item.querySelector('span').addEventListener('click', () => {
+            exercisesList[index].done = !exercisesList[index].done;
+            renderExercises();
+            saveData();
+          });
+
+          // Borrar ejercicio
+          item.querySelector('.delete-ex-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            exercisesList.splice(index, 1);
+            renderExercises();
+            saveData();
+          });
+
+          container.appendChild(item);
+        });
+      }
+
       function saveData() {
         const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'meds-taken'];
         const toggleStates = {};
@@ -492,9 +585,7 @@
           toggles: toggleStates,
           energy: document.getElementById('energy-range').value,
           sleep: document.getElementById('sleep-input').value,
-          exName: document.getElementById('ex-name-input').value,
-          exSeries: document.getElementById('ex-series-input').value,
-          exReps: document.getElementById('ex-reps-input').value,
+          exercises: exercisesList,
           thanks: document.getElementById('thanks-input').value,
         };
 
@@ -509,12 +600,10 @@
         if (data) {
           glassesState = data.glasses || Array(8).fill(false);
           selectedMood = data.mood || '';
+          exercisesList = data.exercises || [];
           document.getElementById('energy-range').value = data.energy || 50;
           document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
           document.getElementById('sleep-input').value = data.sleep || '';
-          document.getElementById('ex-name-input').value = data.exName || '';
-          document.getElementById('ex-series-input').value = data.exSeries || '';
-          document.getElementById('ex-reps-input').value = data.exReps || '';
           document.getElementById('thanks-input').value = data.thanks || '';
 
           if (data.toggles) {
@@ -526,12 +615,10 @@
         } else {
           glassesState = Array(8).fill(false);
           selectedMood = '';
+          exercisesList = [];
           document.getElementById('energy-range').value = 50;
           document.getElementById('energy-val').innerText = '50%';
           document.getElementById('sleep-input').value = '';
-          document.getElementById('ex-name-input').value = '';
-          document.getElementById('ex-series-input').value = '';
-          document.getElementById('ex-reps-input').value = '';
           document.getElementById('thanks-input').value = '';
           toggles.forEach(id => {
             const el = document.getElementById(id);
@@ -540,6 +627,7 @@
         }
 
         renderGlasses();
+        renderExercises();
         updateMoodUI();
       }
 
@@ -589,44 +677,19 @@
         }
       }
 
-      // EVENTOS
-      document.querySelectorAll('.day-btn').forEach(btn => {
-        btn.addEventListener('click', () => changeDay(btn.getAttribute('data-day')));
-      });
+      // BOTÓN AGREGAR EJERCICIO
+      document.getElementById('add-ex-btn').addEventListener('click', () => {
+        const name = document.getElementById('ex-name-input').value.trim();
+        const series = document.getElementById('ex-series-input').value.trim();
+        const reps = document.getElementById('ex-reps-input').value.trim();
 
-      document.querySelectorAll('.toggle-item').forEach(item => {
-        item.addEventListener('click', () => {
-          item.classList.toggle('active');
-          saveData();
-        });
-      });
+        if (name !== '') {
+          exercisesList.push({
+            name: name,
+            series: series || '1',
+            reps: reps || '10',
+            done: false
+          });
 
-      document.querySelectorAll('.mood-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedMood = btn.getAttribute('data-mood');
-          updateMoodUI();
-          saveData();
-        });
-      });
-
-      document.getElementById('energy-range').addEventListener('input', (e) => {
-        document.getElementById('energy-val').innerText = e.target.value + '%';
-        saveData();
-      });
-
-      ['sleep-input', 'ex-name-input', 'ex-series-input', 'ex-reps-input', 'thanks-input'].forEach(id => {
-        document.getElementById(id).addEventListener('input', saveData);
-      });
-
-      document.getElementById('send-btn').addEventListener('click', () => {
-        saveData();
-        updateChart();
-        alert('¡Avance guardado con éxito!');
-      });
-
-      changeDay('Lunes');
-      initChart();
-    });
-  </script>
-</body>
-</html>
+          document.getElementById('ex-name-input').value = '';
+          document.getElementById('ex-series-input').value = '';
