@@ -3,13 +3,14 @@
   "name": "PochocloFit - Tamara Nunia",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3050/3050158.png",
+      "src": "https://em-content.zobj.net/source/microsoft-teams/363/popcorn_1f37f.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "./index.html",
-  "background_color": "#0b0f17",
+  "background_color": "#0f172a",
   "theme_color": "#10b981",
   "display": "standalone"
 }
