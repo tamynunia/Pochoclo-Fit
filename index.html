@@ -31,6 +31,7 @@
       color: var(--text);
       padding: 20px;
       min-height: 100vh;
+      transition: background-color 0.3s ease;
     }
 
     header {
@@ -62,14 +63,31 @@
       font-weight: 600;
     }
 
-    .badge {
-      background-color: var(--primary-soft);
-      color: var(--primary);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border: 1px solid var(--primary);
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-selector {
+      display: flex;
+      gap: 6px;
+      background: var(--bg);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .theme-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .theme-dot.active {
+      border-color: #fff;
     }
 
     .dashboard-grid {
@@ -284,7 +302,7 @@
       margin-top: 5px;
     }
 
-    /* ESTILOS PARA LA LISTA DE EJERCICIOS */
+    /* LISTA DINÁMICA DE EJERCICIOS */
     .exercise-list {
       display: flex;
       flex-direction: column;
@@ -363,7 +381,15 @@
       <div class="brand-title">🍿 Pochoclo-Fit</div>
       <div class="brand-subtitle">by Tamy Nunia</div>
     </div>
-    <span class="badge">Reto Interactivo</span>
+    
+    <div class="header-actions">
+      <!-- SELECTOR DE TEMAS DE COLOR -->
+      <div class="theme-selector">
+        <div class="theme-dot active" style="background-color: #10b981;" data-primary="#10b981" data-bg="#0b0f19" data-card="#151c2c"></div>
+        <div class="theme-dot" style="background-color: #ec4899;" data-primary="#ec4899" data-bg="#180813" data-card="#291022"></div>
+        <div class="theme-dot" style="background-color: #8b5cf6;" data-primary="#8b5cf6" data-bg="#0f0b1e" data-card="#1a1433"></div>
+      </div>
+    </div>
   </header>
 
   <div class="dashboard-grid">
@@ -409,13 +435,21 @@
     <div style="display: flex; flex-direction: column; gap: 20px;">
 
       <div class="card">
-        <div class="card-header">🥗 Comidas y 💊 Medicamentos</div>
+        <div class="card-header">🥗 Hábitos Saludables</div>
         <div class="toggle-list">
           <div class="toggle-item" id="meal-desayuno"><span>Desayuno Equilibrado</span><div class="checkbox">✓</div></div>
           <div class="toggle-item" id="meal-almuerzo"><span>Almuerzo Saludable</span><div class="checkbox">✓</div></div>
           <div class="toggle-item" id="meal-merienda"><span>Merienda Nutritiva</span><div class="checkbox">✓</div></div>
           <div class="toggle-item" id="meal-cena"><span>Cena Ligera</span><div class="checkbox">✓</div></div>
-          <div class="toggle-item" id="meds-taken"><span>💊 Toma de Medicamentos / Suplementos</span><div class="checkbox">✓</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">💊 Toma de Medicamentos</div>
+        <div class="toggle-list">
+          <div class="toggle-item" id="med-manana"><span>🌅 Dosis Mañana</span><div class="checkbox">✓</div></div>
+          <div class="toggle-item" id="med-tarde"><span>☀️ Dosis Tarde</span><div class="checkbox">✓</div></div>
+          <div class="toggle-item" id="med-noche"><span>🌙 Dosis Noche</span><div class="checkbox">✓</div></div>
         </div>
       </div>
 
@@ -457,7 +491,6 @@
         </div>
         <button class="btn-secondary" id="add-ex-btn">+ Agregar Ejercicio</button>
         
-        <!-- Lista Desplegada de Ejercicios -->
         <div class="exercise-list" id="exercise-list"></div>
       </div>
 
@@ -552,14 +585,12 @@
             </div>
           `;
 
-          // Marcar como hecho al hacer clic en el texto
           item.querySelector('span').addEventListener('click', () => {
             exercisesList[index].done = !exercisesList[index].done;
             renderExercises();
             saveData();
           });
 
-          // Borrar ejercicio
           item.querySelector('.delete-ex-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             exercisesList.splice(index, 1);
@@ -572,7 +603,7 @@
       }
 
       function saveData() {
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'meds-taken'];
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
         const toggleStates = {};
         toggles.forEach(id => {
           const el = document.getElementById(id);
@@ -595,7 +626,7 @@
       function loadData() {
         const raw = localStorage.getItem('pochoclo_data_' + activeDay);
         const data = raw ? JSON.parse(raw) : null;
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'meds-taken'];
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
 
         if (data) {
           glassesState = data.glasses || Array(8).fill(false);
@@ -661,35 +692,4 @@
       function getWeeklyWaterData() {
         return daysList.map(day => {
           const raw = localStorage.getItem('pochoclo_data_' + day);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            const count = (parsed.glasses || []).filter(Boolean).length;
-            return count * 0.25;
-          }
-          return 0;
-        });
-      }
-
-      function updateChart() {
-        if (weeklyChart) {
-          weeklyChart.data.datasets[0].data = getWeeklyWaterData();
-          weeklyChart.update();
-        }
-      }
-
-      // BOTÓN AGREGAR EJERCICIO
-      document.getElementById('add-ex-btn').addEventListener('click', () => {
-        const name = document.getElementById('ex-name-input').value.trim();
-        const series = document.getElementById('ex-series-input').value.trim();
-        const reps = document.getElementById('ex-reps-input').value.trim();
-
-        if (name !== '') {
-          exercisesList.push({
-            name: name,
-            series: series || '1',
-            reps: reps || '10',
-            done: false
-          });
-
-          document.getElementById('ex-name-input').value = '';
-          document.getElementById('ex-series-input').value = '';
+          if (r
