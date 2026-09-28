@@ -32,7 +32,6 @@
       color: var(--text);
       padding: 20px;
       min-height: 100vh;
-      transition: background-color 0.3s ease;
     }
 
     header {
@@ -66,24 +65,25 @@
       font-weight: 600;
     }
 
+    /* PERFIL EN EL MARGEN SUPERIOR DERECHO */
     .header-actions {
       display: flex;
       align-items: center;
       gap: 12px;
-      flex-wrap: wrap;
+      margin-left: auto;
     }
 
-    .user-select-container {
+    .profile-switcher {
       display: flex;
       align-items: center;
       gap: 8px;
       background: var(--bg);
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       border: 1px solid var(--card-border);
     }
 
-    .user-select-container select {
+    .profile-switcher select {
       background: transparent;
       color: var(--text);
       border: none;
@@ -93,37 +93,19 @@
       cursor: pointer;
     }
 
-    .theme-selector {
-      display: flex;
-      gap: 8px;
-      background: var(--bg);
-      padding: 6px 10px;
-      border-radius: 20px;
-      border: 1px solid var(--card-border);
-      align-items: center;
-    }
-
-    .theme-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-right: 4px;
-    }
-
-    .theme-dot {
-      width: 22px;
-      height: 22px;
+    .btn-add-profile {
+      background: var(--primary);
+      color: #000;
+      border: none;
       border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      font-weight: bold;
       cursor: pointer;
-      border: 2px solid transparent;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .theme-dot:hover {
-      transform: scale(1.15);
-    }
-
-    .theme-dot.active {
-      border-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
     }
 
     .dashboard-grid {
@@ -165,26 +147,19 @@
     .profile-info {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .profile-details {
-      display: flex;
-      align-items: center;
       gap: 12px;
     }
 
     .avatar {
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--primary), var(--accent-blue));
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #fff;
     }
 
@@ -305,7 +280,7 @@
       color: var(--text-muted);
     }
 
-    input[type="text"], input[type="number"], select {
+    input[type="text"], input[type="number"] {
       width: 100%;
       background-color: var(--bg);
       border: 1px solid var(--card-border);
@@ -330,7 +305,6 @@
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
 
     .btn-secondary {
@@ -344,11 +318,6 @@
       cursor: pointer;
       width: 100%;
       margin-top: 5px;
-      transition: background-color 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--primary-soft);
     }
 
     .dynamic-list {
@@ -408,35 +377,6 @@
       background-color: rgba(244, 63, 94, 0.2);
     }
 
-    .quote-box {
-      background: var(--bg);
-      border-left: 4px solid var(--accent-yellow);
-      padding: 10px 12px;
-      border-radius: 4px;
-      font-style: italic;
-      font-size: 0.85rem;
-      margin-bottom: 8px;
-    }
-
-    .quote-author {
-      text-align: right;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-style: normal;
-      font-weight: bold;
-    }
-
-    .friend-card {
-      background: var(--bg);
-      border: 1px solid var(--card-border);
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
     .chart-container {
       max-width: 1200px;
       margin: 20px auto 0 auto;
@@ -460,20 +400,12 @@
       <div class="brand-subtitle">by Tamy Nunia</div>
     </div>
     
+    <!-- MARGEN SUPERIOR DERECHO: PERFIL Y AMIGOS -->
     <div class="header-actions">
-      <!-- SELECTOR DE PERFILES -->
-      <div class="user-select-container">
-        <label for="user-selector" style="font-size:0.75rem;">Perfil:</label>
-        <select id="user-selector"></select>
-        <button id="add-user-btn" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:bold;">+</button>
-      </div>
-
-      <!-- SELECTOR DE TEMAS DE COLOR -->
-      <div class="theme-selector">
-        <span class="theme-label">Tema:</span>
-        <div class="theme-dot active" style="background-color: #10b981;" data-primary="#10b981" data-bg="#0b0f19" data-card="#151c2c"></div>
-        <div class="theme-dot" style="background-color: #ec4899;" data-primary="#ec4899" data-bg="#180813" data-card="#291022"></div>
-        <div class="theme-dot" style="background-color: #8b5cf6;" data-primary="#8b5cf6" data-bg="#0f0b1e" data-card="#1a1433"></div>
+      <div class="profile-switcher">
+        <label for="profile-select" style="font-size:0.75rem; color: var(--text-muted);">👤 Perfil:</label>
+        <select id="profile-select"></select>
+        <button class="btn-add-profile" id="add-profile-btn" title="Crear perfil para un amigo">+</button>
       </div>
     </div>
   </header>
@@ -485,12 +417,10 @@
       
       <div class="card">
         <div class="profile-info">
-          <div class="profile-details">
-            <div class="avatar" id="user-avatar">TN</div>
-            <div>
-              <h3 style="font-size: 1rem;" id="user-display-name">Tamara Nunia</h3>
-              <span style="font-size: 0.8rem; color: var(--text-muted);">Usuario Activo</span>
-            </div>
+          <div class="avatar" id="user-avatar">TN</div>
+          <div>
+            <h3 style="font-size: 1rem;" id="user-display-name">Tamara Nunia</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Usuario Activo</span>
           </div>
         </div>
       </div>
@@ -517,9 +447,9 @@
         <div class="glasses-grid" id="glasses-container"></div>
       </div>
 
-      <!-- NUEVA SECCIÓN: MEDIDAS Y DATOS CORPORALES -->
+      <!-- PANEL DE DATOS Y MEDIDAS CORPORALES COMPLETO -->
       <div class="card">
-        <div class="card-header">📏 Datos Corporales y Medidas</div>
+        <div class="card-header">📏 Registro Corporal y Medidas</div>
         <div class="grid-2">
           <div class="input-group">
             <label>Peso (kg):</label>
@@ -595,16 +525,6 @@
         </div>
       </div>
 
-      <!-- NUEVA SECCIÓN: FRASES MOTIVADORAS SOCIALES -->
-      <div class="card">
-        <div class="card-header">🔥 Muro Motivacional</div>
-        <div id="quotes-container" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
-        <div class="input-group" style="margin-top: 5px;">
-          <input type="text" id="quote-input" placeholder="Escribe una frase inspiradora para el grupo...">
-          <button class="btn-secondary" id="add-quote-btn">Compartir Frase</button>
-        </div>
-      </div>
-
     </div>
 
     <!-- COLUMNA 3 -->
@@ -649,12 +569,6 @@
         <div class="dynamic-list" id="thanks-list"></div>
       </div>
 
-      <!-- NUEVA SECCIÓN: PROGRESO DE AMIGOS -->
-      <div class="card">
-        <div class="card-header">👥 Progreso del Grupo</div>
-        <div id="friends-progress-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto;"></div>
-      </div>
-
       <div class="card">
         <button class="btn-action" id="send-btn">Guardar Avance de Hoy</button>
       </div>
@@ -663,7 +577,7 @@
 
   </div>
 
-  <!-- GRÁFICO DE HISTORIAL DE LA SEMANA -->
+  <!-- GRÁFICO DE HISTORIAL -->
   <div class="chart-container">
     <div class="card">
       <div class="card-header">📊 Historial Semanal de Agua (Litros)</div>
@@ -686,31 +600,103 @@
       let weeklyChart;
 
       const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-      let usersList = ['Tamara Nunia'];
+      let profilesList = ['Tamara Nunia'];
 
-      // Inicialización de Usuarios
-      function loadUsers() {
-        const storedUsers = localStorage.getItem('pochoclo_users');
-        if (storedUsers) {
-          usersList = JSON.parse(storedUsers);
+      // GESTIÓN DE PERFILES EN MARGEN SUPERIOR DERECHO
+      function loadProfiles() {
+        const stored = localStorage.getItem('pochoclo_profiles');
+        if (stored) {
+          profilesList = JSON.parse(stored);
         } else {
-          localStorage.setItem('pochoclo_users', JSON.stringify(usersList));
+          localStorage.setItem('pochoclo_profiles', JSON.stringify(profilesList));
         }
-        renderUserSelector();
+        renderProfilesSelect();
       }
 
-      function renderUserSelector() {
-        const selector = document.getElementById('user-selector');
-        selector.innerHTML = '';
-        usersList.forEach(user => {
+      function renderProfilesSelect() {
+        const select = document.getElementById('profile-select');
+        select.innerHTML = '';
+        profilesList.forEach(name => {
           const opt = document.createElement('option');
-          opt.value = user;
-          opt.innerText = user;
-          if (user === activeUser) opt.selected = true;
-          selector.appendChild(opt);
+          opt.value = name;
+          opt.innerText = name;
+          if (name === activeUser) opt.selected = true;
+          select.appendChild(opt);
         });
       }
 
-      function switchUser(newUser) {
-        activeUser = newUser;
-        docum
+      function switchProfile(newName) {
+        activeUser = newName;
+        document.getElementById('user-display-name').innerText = activeUser;
+        const initials = activeUser.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        document.getElementById('user-avatar').innerText = initials || 'U';
+        loadData();
+      }
+
+      document.getElementById('add-profile-btn').addEventListener('click', () => {
+        const name = prompt('Escribe el nombre del nuevo amigo/a para crear su perfil:');
+        if (name && name.trim()) {
+          const cleanName = name.trim();
+          if (!profilesList.includes(cleanName)) {
+            profilesList.push(cleanName);
+            localStorage.setItem('pochoclo_profiles', JSON.stringify(profilesList));
+            renderProfilesSelect();
+            switchProfile(cleanName);
+          } else {
+            alert('Este perfil ya existe.');
+          }
+        }
+      });
+
+      document.getElementById('profile-select').addEventListener('change', (e) => {
+        switchProfile(e.target.value);
+      });
+
+      // CAMBIO DE DÍA
+      function changeDay(day) {
+        activeDay = day;
+        document.querySelectorAll('.day-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-day') === day);
+        });
+        loadData();
+      }
+
+      // PANEL INTERACTIVO DE AGUA
+      function renderGlasses() {
+        const container = document.getElementById('glasses-container');
+        container.innerHTML = '';
+        let count = 0;
+
+        glassesState.forEach((isFull, i) => {
+          if (isFull) count++;
+          const btn = document.createElement('div');
+          btn.className = isFull ? 'glass-btn active' : 'glass-btn';
+          btn.innerText = '🥤';
+          btn.addEventListener('click', () => {
+            glassesState[i] = !glassesState[i];
+            renderGlasses();
+            saveData();
+            updateChart();
+          });
+          container.appendChild(btn);
+        });
+
+        document.getElementById('water-count-text').innerText = `${count}/8 vasos`;
+        document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(2)} L`;
+      }
+
+      // PANEL INTERACTIVO DE EJERCICIOS
+      function renderExercises() {
+        const container = document.getElementById('exercise-list');
+        container.innerHTML = '';
+
+        exercisesList.forEach((ex, index) => {
+          const item = document.createElement('div');
+          item.className = 'dynamic-item' + (ex.done ? ' done' : '');
+          
+          item.innerHTML = `
+            <span style="cursor: pointer;"><strong>${ex.name}</strong> (${ex.series} series x ${ex.reps})</span>
+            <button class="delete-item-btn">✕</button>
+          `;
+
+          item.qu
