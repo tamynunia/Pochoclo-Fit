@@ -18,6 +18,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    :root {
+      --theme-color: #22c55e;
+      --theme-border: #22c55e4d;
+      --theme-bg-light: #22c55e33;
+    }
     body {
       background-color: #0f172a;
       color: #f8fafc;
@@ -42,10 +47,13 @@
       user-select: none;
     }
     .circle-checkbox.checked {
-      background-color: #22c55e;
-      border-color: #22c55e;
+      background-color: var(--theme-color);
+      border-color: var(--theme-color);
       color: #ffffff;
     }
+    .theme-accent-text { color: var(--theme-color) !important; }
+    .theme-accent-bg { background-color: var(--theme-color) !important; }
+    .theme-accent-border { border-color: var(--theme-border) !important; }
   </style>
 </head>
 <body class="pb-16">
@@ -54,17 +62,15 @@
   <header class="p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
     <div class="max-w-xl mx-auto flex justify-between items-center">
       <div>
-        <h1 class="text-xl font-bold text-green-400 flex items-center gap-2">
-          ⚡ FitLife <span class="text-xs px-2 py-0.5 bg-green-950 text-green-400 rounded-full border border-green-800">By Tamara Nunia</span>
+        <h1 class="text-xl font-bold theme-accent-text flex items-center gap-2">
+          ⚡ FitLife <span class="text-xs px-2 py-0.5 bg-slate-800 theme-accent-text rounded-full border theme-accent-border">By Tamara Nunia</span>
         </h1>
         <p class="text-xs text-slate-400" id="user-display-name">Perfil: Tamara Nunia</p>
       </div>
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-users text-slate-400 text-sm"></i>
-        <select id="friend-selector" onchange="switchProfile()" class="bg-slate-800 text-xs text-slate-200 p-2 rounded-lg border border-slate-700">
-          <option value="me">Mi Perfil (Tamara)</option>
-          <option value="friend1">Amiga: Sofía</option>
-          <option value="friend2">Amigo: Lucas</option>
+        <select id="profile-selector" onchange="switchProfile()" class="bg-slate-800 text-xs text-slate-200 p-2 rounded-lg border border-slate-700">
+          <!-- Cargado dinámicamente -->
         </select>
       </div>
     </div>
@@ -72,14 +78,68 @@
 
   <main class="max-w-xl mx-auto p-4 space-y-6">
 
+    <!-- SECCIÓN DE CONFIGURACIÓN DE TEMA Y PERFILES -->
+    <section class="card space-y-4 border theme-accent-border">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-slate-200 flex items-center gap-2">
+          <i class="fa-solid fa-palette theme-accent-text"></i> Ajustes de la App y Perfil
+        </h3>
+        <button onclick="toggleSettingsPanel()" class="text-xs text-slate-400 hover:text-white underline">
+          Mostrar / Ocultar
+        </button>
+      </div>
+
+      <div id="settings-panel" class="space-y-4">
+        <!-- CAMBIAR COLOR DE TEMA -->
+        <div>
+          <label class="text-xs text-slate-400 block mb-2 font-semibold">Cambiar Color de Tema Visual:</label>
+          <div class="flex gap-3 justify-start items-center">
+            <button onclick="setAppTheme('#22c55e')" class="w-7 h-7 rounded-full bg-green-500 border-2 border-white hover:scale-110 transition" title="Verde Esmeralda"></button>
+            <button onclick="setAppTheme('#3b82f6')" class="w-7 h-7 rounded-full bg-blue-500 border-2 border-white hover:scale-110 transition" title="Azul Océano"></button>
+            <button onclick="setAppTheme('#a855f7')" class="w-7 h-7 rounded-full bg-purple-500 border-2 border-white hover:scale-110 transition" title="Violeta Neón"></button>
+            <button onclick="setAppTheme('#ec4899')" class="w-7 h-7 rounded-full bg-pink-500 border-2 border-white hover:scale-110 transition" title="Rosa Neón"></button>
+            <button onclick="setAppTheme('#f97316')" class="w-7 h-7 rounded-full bg-orange-500 border-2 border-white hover:scale-110 transition" title="Naranja Fuego"></button>
+            <button onclick="setAppTheme('#64748b')" class="w-7 h-7 rounded-full bg-slate-500 border-2 border-white hover:scale-110 transition" title="Gris Clásico"></button>
+          </div>
+        </div>
+
+        <!-- GESTIÓN DE PERFILES -->
+        <div class="pt-3 border-t border-slate-800 space-y-2">
+          <label class="text-xs text-slate-400 block font-semibold">Crear un Nuevo Perfil de Usuario:</label>
+          <div class="flex gap-2">
+            <input type="text" id="new-profile-name" placeholder="Nombre (Ej: Sofía, Lucas)" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+            <button onclick="createNewProfile()" class="px-3 py-2 theme-accent-bg text-slate-900 rounded-lg text-xs font-bold hover:opacity-90 transition">
+              + Crear Perfil
+            </button>
+          </div>
+        </div>
+
+        <!-- COMPARTIR E IMPORTAR PERFIL -->
+        <div class="pt-3 border-t border-slate-800 space-y-2">
+          <label class="text-xs text-slate-400 block font-semibold">Compartir o Cargar Perfil:</label>
+          <div class="flex gap-2">
+            <button onclick="exportProfileData()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-300">
+              <i class="fa-solid fa-share-nodes"></i> Copiar Código para Compartir
+            </button>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <input type="text" id="import-code-input" placeholder="Pegar código de otro perfil aquí..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+            <button onclick="importProfileData()" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white">
+              Cargar Perfil
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SELECTOR DE DÍA DE LA SEMANA (7 DÍAS) -->
     <section class="card space-y-2">
       <div class="flex justify-between items-center">
         <span class="text-xs font-semibold text-slate-400">Selecciona el día de registro:</span>
-        <span class="text-xs text-green-400 font-bold" id="current-day-label">Lunes</span>
+        <span class="text-xs theme-accent-text font-bold" id="current-day-label">Lunes</span>
       </div>
       <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold" id="day-buttons">
-        <button onclick="selectDay('Lunes')" class="day-btn py-2 bg-green-600 rounded-lg">Lun</button>
+        <button onclick="selectDay('Lunes')" class="day-btn py-2 theme-accent-bg text-slate-900 rounded-lg">Lun</button>
         <button onclick="selectDay('Martes')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Mar</button>
         <button onclick="selectDay('Miércoles')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Mié</button>
         <button onclick="selectDay('Jueves')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Jue</button>
@@ -90,13 +150,13 @@
     </section>
 
     <!-- DASHBOARD PRINCIPAL Y BARRA DE PROGRESO GENERAL -->
-    <section class="card bg-gradient-to-r from-slate-800 to-slate-900 border border-green-500/30 space-y-3">
+    <section class="card bg-gradient-to-r from-slate-800 to-slate-900 border theme-accent-border space-y-3">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-bold text-slate-200" id="today-header">Hoy: Lunes</h2>
-        <span class="text-xs px-2.5 py-1 bg-green-500/20 text-green-400 rounded-full font-bold" id="overall-percentage-text">0% Completado 💚</span>
+        <span class="text-xs px-2.5 py-1 bg-slate-800 theme-accent-text rounded-full font-bold" id="overall-percentage-text">0% Completado 💚</span>
       </div>
       <div class="w-full bg-slate-700 h-4 rounded-full overflow-hidden">
-        <div id="overall-progress-bar" class="bg-green-500 h-full transition-all duration-500" style="width: 0%;"></div>
+        <div id="overall-progress-bar" class="theme-accent-bg h-full transition-all duration-500" style="width: 0%;"></div>
       </div>
     </section>
 
@@ -122,7 +182,7 @@
     <section class="card space-y-4">
       <div class="flex justify-between items-center">
         <h3 class="font-bold text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-dumbbell text-green-400"></i> Rutina del Día
+          <i class="fa-solid fa-dumbbell theme-accent-text"></i> Rutina del Día
         </h3>
         <select id="workout-days-target" class="bg-slate-800 text-xs p-1.5 rounded border border-slate-700 text-slate-300" onchange="saveCurrentData()">
           <option value="3">Meta: 3 Días/sem</option>
@@ -139,12 +199,12 @@
 
       <!-- LISTA DE EJERCICIOS EDITABLES -->
       <div class="space-y-3" id="exercise-list">
-        <!-- Se renderiza dinámicamente con opciones de editar y eliminar -->
+        <!-- Renderizado dinámicamente -->
       </div>
 
       <!-- FORMULARIO PARA AGREGAR NUEVO EJERCICIO -->
       <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-700 space-y-3">
-        <span class="text-xs font-bold text-green-400 block"><i class="fa-solid fa-plus-circle"></i> Agregar Nuevo Ejercicio</span>
+        <span class="text-xs font-bold theme-accent-text block"><i class="fa-solid fa-plus-circle"></i> Agregar Nuevo Ejercicio</span>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
           <input type="text" id="new-ex-name" placeholder="Nombre (Ej: Estocadas)" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
           <input type="text" id="new-ex-reps" placeholder="Detalle (Ej: 4x12)" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
@@ -154,7 +214,7 @@
             <option value="5">5 Series</option>
           </select>
         </div>
-        <button onclick="addExercise()" class="w-full py-2 bg-green-600 hover:bg-green-500 rounded-lg text-xs font-bold transition">
+        <button onclick="addExercise()" class="w-full py-2 theme-accent-bg text-slate-900 rounded-lg text-xs font-bold hover:opacity-90 transition">
           + Agregar Ejercicio a la Lista
         </button>
       </div>
@@ -233,7 +293,7 @@
       <div class="grid grid-cols-2 gap-3 text-xs">
         <div>
           <label class="text-slate-400">Nombre de Usuario</label>
-          <input type="text" id="user-name" value="Tamara Nunia" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <input type="text" id="user-name" value="Tamara Nunia" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="updateProfileNameFromInput()">
         </div>
         <div>
           <label class="text-slate-400">Altura (cm)</label>
@@ -290,105 +350,6 @@
     <!-- RESUMEN GRÁFICO SEMANAL -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-chart-line text-emerald-400"></i> Avance Semanal
+        <i class="fa-solid fa-chart-line theme-accent-text"></i> Avance Semanal
       </h3>
-      <div class="relative w-full h-64">
-        <canvas id="weeklyChart"></canvas>
-      </div>
-    </section>
-
-    <!-- SECCIÓN DE AUTORÍA Y COPYRIGHT -->
-    <section class="card bg-slate-900 border border-slate-800 text-center space-y-2">
-      <p class="text-xs text-slate-300 font-semibold flex items-center justify-center gap-2">
-        <i class="fa-solid fa-shield-halved text-green-400"></i>
-        <span>Aplicación Creada por Tamara Nunia</span>
-      </p>
-      <p class="text-[10px] text-slate-500 leading-relaxed">
-        © 2026 Tamara Nunia. Todos los derechos reservados. Todos los elementos gráficos, código fuente e idea conceptual pertenecen exclusivamente a su autora.
-      </p>
-    </section>
-
-  </main>
-
-  <footer class="mt-4 text-center text-xs text-slate-500 py-4 border-t border-slate-800">
-    <p>FitLife App © 2026 | Tamara Nunia - Todos los derechos reservados.</p>
-  </footer>
-
-  <!-- SCRIPT DE FUNCIONAMIENTO INTERACTIVO, EDICIÓN DE EJERCICIOS Y PERSISTENCIA -->
-  <script>
-    let currentDay = 'Lunes';
-    let currentProfile = 'me';
-    let selectedMood = '';
-    let chartInstance = null;
-
-    // Ejercicios por defecto
-    const defaultExercises = [
-      { id: 101, name: 'Sentadillas', reps: '4x12', count: 4 },
-      { id: 102, name: 'Flexiones de Brazo', reps: '3x10', count: 3 },
-      { id: 103, name: 'Estocadas', reps: '3x12', count: 3 }
-    ];
-
-    let exercises = [];
-
-    function getStoredData(key, fallback) {
-      const data = localStorage.getItem(`fitData_${currentProfile}_${key}`);
-      return data ? JSON.parse(data) : fallback;
-    }
-
-    function setStoredData(key, value) {
-      localStorage.setItem(`fitData_${currentProfile}_${key}`, JSON.stringify(value));
-    }
-
-    // Cambiar día seleccionado
-    function selectDay(day) {
-      currentDay = day;
-      document.getElementById('current-day-label').innerText = day;
-      document.getElementById('today-header').innerText = `Hoy: ${day}`;
-
-      const buttons = document.querySelectorAll('.day-btn');
-      buttons.forEach(btn => {
-        if(btn.innerText.toLowerCase().startsWith(day.substring(0,3).toLowerCase())) {
-          btn.className = 'day-btn py-2 bg-green-600 rounded-lg text-white font-bold';
-        } else {
-          btn.className = 'day-btn py-2 bg-slate-800 rounded-lg text-slate-400';
-        }
-      });
-
-      loadDayData();
-    }
-
-    // Renderizar ejercicios con botones de Editar y Eliminar
-    function renderExercises() {
-      const list = document.getElementById('exercise-list');
-      list.innerHTML = '';
-
-      const dayChecks = getStoredData(`ex_checks_${currentDay}`, {});
-
-      if(exercises.length === 0) {
-        list.innerHTML = `<p class="text-xs text-slate-500 text-center py-2">No hay ejercicios registrados. ¡Agrega uno abajo!</p>`;
-        return;
-      }
-
-      exercises.forEach((ex) => {
-        const div = document.createElement('div');
-        div.className = 'p-3 bg-slate-800 rounded-xl space-y-2 border border-slate-700/50';
-        
-        let circlesHtml = '';
-        const seriesCount = ex.count || 4;
-        for(let i = 1; i <= seriesCount; i++) {
-          const isChecked = dayChecks[`ex_${ex.id}_s_${i}`] ? 'checked' : '';
-          const isHidden = isChecked ? '' : 'hidden';
-          circlesHtml += `
-            <div class="circle-checkbox ex-check ${isChecked}" data-ex="${ex.id}" data-serie="${i}" onclick="toggleExerciseCircle(this)">
-              <i class="fa-solid fa-check text-xs ${isHidden}"></i>
-            </div>
-          `;
-        }
-
-        div.innerHTML = `
-          <div class="flex justify-between items-center text-sm">
-            <div>
-              <span class="font-semibold text-slate-200">${ex.name}</span>
-              <span class="text-xs text-slate-400 ml-2">(${ex.reps})</span>
-            </div>
-            <div class="flex items-center gap-2">
+      <div class="relative w-full
