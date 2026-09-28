@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -693,4 +692,161 @@
           thanksList = [];
           document.getElementById('energy-range').value = 50;
           document.getElementById('energy-val').innerText = '50%';
-          document.getElementById('
+          document.getElementById('sleep-input').value = '';
+          toggles.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active');
+          });
+        }
+
+        document.getElementById('ex-name-input').value = '';
+        document.getElementById('ex-series-input').value = '';
+        document.getElementById('ex-reps-input').value = '';
+        document.getElementById('thanks-text-input').value = '';
+
+        renderGlasses();
+        renderExercises();
+        renderThanks();
+        updateMoodUI();
+      }
+
+      function updateMoodUI() {
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-mood') === selectedMood);
+        });
+      }
+
+      function initChart() {
+        const ctx = document.getElementById('weeklyChart').getContext('2d');
+        weeklyChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            datasets: [{
+              label: 'Litros de Agua Consumidos',
+              data: getWeeklyWaterData(),
+              backgroundColor: '#38bdf8',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true, max: 2.5 }
+            }
+          }
+        });
+      }
+
+      function getWeeklyWaterData() {
+        return daysList.map(day => {
+          const raw = localStorage.getItem('pochoclo_data_' + day);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const count = (parsed.glasses || []).filter(Boolean).length;
+            return count * 0.25;
+          }
+          return 0;
+        });
+      }
+
+      function updateChart() {
+        if (weeklyChart) {
+          weeklyChart.data.datasets[0].data = getWeeklyWaterData();
+          weeklyChart.update();
+        }
+      }
+
+      // CAMBIO DE TEMA DE COLOR
+      document.querySelectorAll('.theme-dot').forEach(dot => {
+        dot.addEventListener('click', () => {
+          document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+          dot.classList.add('active');
+          const primary = dot.getAttribute('data-primary');
+          const bg = dot.getAttribute('data-bg');
+          const card = dot.getAttribute('data-card');
+
+          document.documentElement.style.setProperty('--primary', primary);
+          document.documentElement.style.setProperty('--bg', bg);
+          document.documentElement.style.setProperty('--card-bg', card);
+        });
+      });
+
+      // BOTÓN AGREGAR EJERCICIO
+      document.getElementById('add-ex-btn').addEventListener('click', () => {
+        const nameInput = document.getElementById('ex-name-input');
+        const seriesInput = document.getElementById('ex-series-input');
+        const repsInput = document.getElementById('ex-reps-input');
+
+        const name = nameInput.value.trim();
+        const series = seriesInput.value.trim();
+        const reps = repsInput.value.trim();
+
+        if (name !== '') {
+          exercisesList.push({
+            name: name,
+            series: series || '1',
+            reps: reps || '10',
+            done: false
+          });
+
+          nameInput.value = '';
+          seriesInput.value = '';
+          repsInput.value = '';
+
+          renderExercises();
+          saveData();
+        }
+      });
+
+      // BOTÓN AGREGAR AGRADECIMIENTO
+      document.getElementById('add-thanks-btn').addEventListener('click', () => {
+        const input = document.getElementById('thanks-text-input');
+        const text = input.value.trim();
+
+        if (text !== '') {
+          thanksList.push(text);
+          input.value = '';
+          renderThanks();
+          saveData();
+        }
+      });
+
+      // EVENTOS GENERALES
+      document.querySelectorAll('.day-btn').forEach(btn => {
+        btn.addEventListener('click', () => changeDay(btn.getAttribute('data-day')));
+      });
+
+      document.querySelectorAll('.toggle-item').forEach(item => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('active');
+          saveData();
+        });
+      });
+
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedMood = btn.getAttribute('data-mood');
+          updateMoodUI();
+          saveData();
+        });
+      });
+
+      document.getElementById('energy-range').addEventListener('input', (e) => {
+        document.getElementById('energy-val').innerText = e.target.value + '%';
+        saveData();
+      });
+
+      document.getElementById('sleep-input').addEventListener('input', saveData);
+
+      document.getElementById('send-btn').addEventListener('click', () => {
+        saveData();
+        updateChart();
+        alert('¡Avance guardado con éxito!');
+      });
+
+      changeDay('Lunes');
+      initChart();
+    });
+  </script>
+</body>
+</html>
