@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -71,19 +72,31 @@
 
     .theme-selector {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       background: var(--bg);
-      padding: 4px;
-      border-radius: 10px;
+      padding: 6px 10px;
+      border-radius: 20px;
       border: 1px solid var(--card-border);
+      align-items: center;
+    }
+
+    .theme-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-right: 4px;
     }
 
     .theme-dot {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-dot:hover {
+      transform: scale(1.15);
     }
 
     .theme-dot.active {
@@ -256,7 +269,7 @@
       color: var(--text-muted);
     }
 
-    input[type="text"], input[type="number"], textarea {
+    input[type="text"], input[type="number"] {
       width: 100%;
       background-color: var(--bg);
       border: 1px solid var(--card-border);
@@ -265,11 +278,6 @@
       border-radius: 8px;
       font-size: 0.85rem;
       outline: none;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 70px;
     }
 
     input[type="range"] {
@@ -300,10 +308,15 @@
       cursor: pointer;
       width: 100%;
       margin-top: 5px;
+      transition: background-color 0.2s ease;
     }
 
-    /* LISTA DINÁMICA DE EJERCICIOS */
-    .exercise-list {
+    .btn-secondary:hover {
+      background-color: var(--primary-soft);
+    }
+
+    /* LISTAS DINÁMICAS (EJERCICIOS Y AGRADECIMIENTOS) */
+    .dynamic-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -312,7 +325,7 @@
       overflow-y: auto;
     }
 
-    .exercise-item {
+    .dynamic-item {
       background-color: var(--bg);
       border: 1px solid var(--card-border);
       padding: 8px 12px;
@@ -323,18 +336,19 @@
       font-size: 0.85rem;
     }
 
-    .exercise-item.done span {
+    .dynamic-item.done span {
       text-decoration: line-through;
       color: var(--text-muted);
     }
 
-    .delete-ex-btn {
+    .delete-item-btn {
       color: var(--accent-pink);
       background: none;
       border: none;
       cursor: pointer;
       font-weight: bold;
       margin-left: 8px;
+      font-size: 1rem;
     }
 
     .mood-row {
@@ -385,6 +399,7 @@
     <div class="header-actions">
       <!-- SELECTOR DE TEMAS DE COLOR -->
       <div class="theme-selector">
+        <span class="theme-label">Tema:</span>
         <div class="theme-dot active" style="background-color: #10b981;" data-primary="#10b981" data-bg="#0b0f19" data-card="#151c2c"></div>
         <div class="theme-dot" style="background-color: #ec4899;" data-primary="#ec4899" data-bg="#180813" data-card="#291022"></div>
         <div class="theme-dot" style="background-color: #8b5cf6;" data-primary="#8b5cf6" data-bg="#0f0b1e" data-card="#1a1433"></div>
@@ -491,7 +506,7 @@
         </div>
         <button class="btn-secondary" id="add-ex-btn">+ Agregar Ejercicio</button>
         
-        <div class="exercise-list" id="exercise-list"></div>
+        <div class="dynamic-list" id="exercise-list"></div>
       </div>
 
       <div class="card">
@@ -504,9 +519,12 @@
           <div class="mood-btn" data-mood="😴">😴</div>
         </div>
         <div class="input-group" style="margin-top: 10px;">
-          <label>Notas de Agradecimiento:</label>
-          <textarea id="thanks-input" placeholder="¿Por qué estás agradecida hoy?"></textarea>
+          <label>Agregar Agradecimiento:</label>
+          <input type="text" id="thanks-text-input" placeholder="¿Por qué estás agradecida hoy?">
+          <button class="btn-secondary" id="add-thanks-btn">+ Agregar Nota</button>
         </div>
+        
+        <div class="dynamic-list" id="thanks-list"></div>
       </div>
 
       <div class="card">
@@ -535,6 +553,7 @@
       let glassesState = Array(8).fill(false);
       let selectedMood = '';
       let exercisesList = [];
+      let thanksList = [];
       let weeklyChart;
 
       const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -576,12 +595,12 @@
 
         exercisesList.forEach((ex, index) => {
           const item = document.createElement('div');
-          item.className = 'exercise-item' + (ex.done ? ' done' : '');
+          item.className = 'dynamic-item' + (ex.done ? ' done' : '');
           
           item.innerHTML = `
             <span style="cursor: pointer;"><strong>${ex.name}</strong> (${ex.series} series x ${ex.reps})</span>
             <div>
-              <button class="delete-ex-btn" data-index="${index}">✕</button>
+              <button class="delete-item-btn" data-index="${index}">✕</button>
             </div>
           `;
 
@@ -591,10 +610,33 @@
             saveData();
           });
 
-          item.querySelector('.delete-ex-btn').addEventListener('click', (e) => {
+          item.querySelector('.delete-item-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             exercisesList.splice(index, 1);
             renderExercises();
+            saveData();
+          });
+
+          container.appendChild(item);
+        });
+      }
+
+      function renderThanks() {
+        const container = document.getElementById('thanks-list');
+        container.innerHTML = '';
+
+        thanksList.forEach((text, index) => {
+          const item = document.createElement('div');
+          item.className = 'dynamic-item';
+          
+          item.innerHTML = `
+            <span>✨ ${text}</span>
+            <button class="delete-item-btn" data-index="${index}">✕</button>
+          `;
+
+          item.querySelector('.delete-item-btn').addEventListener('click', () => {
+            thanksList.splice(index, 1);
+            renderThanks();
             saveData();
           });
 
@@ -617,7 +659,7 @@
           energy: document.getElementById('energy-range').value,
           sleep: document.getElementById('sleep-input').value,
           exercises: exercisesList,
-          thanks: document.getElementById('thanks-input').value,
+          thanks: thanksList,
         };
 
         localStorage.setItem('pochoclo_data_' + activeDay, JSON.stringify(data));
@@ -632,10 +674,10 @@
           glassesState = data.glasses || Array(8).fill(false);
           selectedMood = data.mood || '';
           exercisesList = data.exercises || [];
+          thanksList = data.thanks || [];
           document.getElementById('energy-range').value = data.energy || 50;
           document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
           document.getElementById('sleep-input').value = data.sleep || '';
-          document.getElementById('thanks-input').value = data.thanks || '';
 
           if (data.toggles) {
             toggles.forEach(id => {
@@ -644,52 +686,11 @@
             });
           }
         } else {
+          // Limpia completamente los campos al entrar a un día nuevo sin registros
           glassesState = Array(8).fill(false);
           selectedMood = '';
           exercisesList = [];
+          thanksList = [];
           document.getElementById('energy-range').value = 50;
           document.getElementById('energy-val').innerText = '50%';
-          document.getElementById('sleep-input').value = '';
-          document.getElementById('thanks-input').value = '';
-          toggles.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.classList.remove('active');
-          });
-        }
-
-        renderGlasses();
-        renderExercises();
-        updateMoodUI();
-      }
-
-      function updateMoodUI() {
-        document.querySelectorAll('.mood-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('data-mood') === selectedMood);
-        });
-      }
-
-      function initChart() {
-        const ctx = document.getElementById('weeklyChart').getContext('2d');
-        weeklyChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-            datasets: [{
-              label: 'Litros de Agua Consumidos',
-              data: getWeeklyWaterData(),
-              backgroundColor: '#38bdf8',
-              borderRadius: 6
-            }]
-          },
-          options: {
-            scales: {
-              y: { beginAtZero: true, max: 2.5 }
-            }
-          }
-        });
-      }
-
-      function getWeeklyWaterData() {
-        return daysList.map(day => {
-          const raw = localStorage.getItem('pochoclo_data_' + day);
-          if (r
+          document.getElementById('
