@@ -8,7 +8,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Reto Interactivo - Tamara Nunia</title>
   <style>
     :root {
@@ -26,13 +26,15 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
       padding-bottom: 50px;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     header {
@@ -48,7 +50,7 @@
     }
 
     .brand-title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: bold;
       color: var(--accent);
       display: flex;
@@ -108,7 +110,6 @@
       gap: 8px;
     }
 
-    /* THEMES */
     .color-picker {
       display: flex;
       gap: 12px;
@@ -121,7 +122,6 @@
       cursor: pointer;
     }
 
-    /* DAYS SELECTOR */
     .days-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -145,7 +145,6 @@
       border-color: var(--accent);
     }
 
-    /* PROGRESS BAR */
     .progress-bar-bg {
       background-color: #090d16;
       height: 14px;
@@ -173,8 +172,7 @@
       margin-top: 6px;
     }
 
-    /* INPUTS */
-    input[type="text"], input[type="number"], textarea {
+    input[type="text"], input[type="number"] {
       width: 100%;
       background-color: #090d16;
       border: 1px solid var(--border);
@@ -184,12 +182,10 @@
       font-size: 0.8rem;
       outline: none;
       margin-top: 4px;
-    }
-    input:focus, textarea:focus {
-      border-color: var(--accent);
+      user-select: text;
+      -webkit-user-select: text;
     }
 
-    /* GRID MEALS & MEDS */
     .interactive-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -210,7 +206,6 @@
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      user-select: none;
     }
     .toggle-box.active {
       border-color: var(--accent);
@@ -227,6 +222,7 @@
       justify-content: center;
       font-size: 12px;
       font-weight: bold;
+      pointer-events: none;
     }
     .toggle-box.active .check-circle {
       background-color: var(--accent);
@@ -234,7 +230,6 @@
       color: #090d16;
     }
 
-    /* GLASSES */
     .glasses-grid {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
@@ -249,14 +244,12 @@
       text-align: center;
       cursor: pointer;
       font-size: 1.2rem;
-      user-select: none;
     }
     .glass-item.active {
       border-color: #06b6d4;
       background-color: rgba(6, 182, 212, 0.2);
     }
 
-    /* MOODS */
     .mood-grid {
       display: flex;
       justify-content: space-between;
@@ -278,7 +271,6 @@
       background-color: rgba(236, 72, 153, 0.2);
     }
 
-    /* CUSTOM BAR CHART */
     .chart-container {
       display: flex;
       align-items: flex-end;
@@ -321,45 +313,42 @@
 
   <header>
     <div>
-      <div class="brand-title">⚡ Mi Reto Interactivo <span class="badge">By Tamara Nunia</span></div>
+      <div class="brand-title">⚡ Mi Reto Interactivo <span class="badge">Tamara Nunia</span></div>
       <div class="subtitle" id="user-display-name">Perfil: Tamara Nunia</div>
     </div>
-    <button class="share-btn" onclick="shareProgress()">Compartir</button>
+    <button class="share-btn" id="share-btn">Compartir</button>
   </header>
 
   <main>
 
-    <!-- PALETA DE COLORES -->
     <div class="card">
       <div class="card-title">🎨 Personalizar Color Visual</div>
       <div class="color-picker">
-        <div class="color-dot" style="background:#22c55e" onclick="setTheme('#22c55e')"></div>
-        <div class="color-dot" style="background:#3b82f6" onclick="setTheme('#3b82f6')"></div>
-        <div class="color-dot" style="background:#a855f7" onclick="setTheme('#a855f7')"></div>
-        <div class="color-dot" style="background:#ec4899" onclick="setTheme('#ec4899')"></div>
-        <div class="color-dot" style="background:#f97316" onclick="setTheme('#f97316')"></div>
-        <div class="color-dot" style="background:#06b6d4" onclick="setTheme('#06b6d4')"></div>
+        <div class="color-dot" style="background:#22c55e" data-color="#22c55e"></div>
+        <div class="color-dot" style="background:#3b82f6" data-color="#3b82f6"></div>
+        <div class="color-dot" style="background:#a855f7" data-color="#a855f7"></div>
+        <div class="color-dot" style="background:#ec4899" data-color="#ec4899"></div>
+        <div class="color-dot" style="background:#f97316" data-color="#f97316"></div>
+        <div class="color-dot" style="background:#06b6d4" data-color="#06b6d4"></div>
       </div>
     </div>
 
-    <!-- SELECTOR DE DÍAS -->
     <div class="card">
-      <div style="display:flex; justify-between; align-items:center;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-size:0.8rem; color:var(--text-muted);">Día del Reto:</span>
         <span id="current-day-title" style="font-size:0.85rem; font-weight:bold; color:var(--accent)">Lunes</span>
       </div>
       <div class="days-grid">
-        <button class="day-btn active" id="btn-Lunes" onclick="changeDay('Lunes')">Lun</button>
-        <button class="day-btn" id="btn-Martes" onclick="changeDay('Martes')">Mar</button>
-        <button class="day-btn" id="btn-Miércoles" onclick="changeDay('Miércoles')">Mié</button>
-        <button class="day-btn" id="btn-Jueves" onclick="changeDay('Jueves')">Jue</button>
-        <button class="day-btn" id="btn-Viernes" onclick="changeDay('Viernes')">Vie</button>
-        <button class="day-btn" id="btn-Sábado" onclick="changeDay('Sábado')">Sáb</button>
-        <button class="day-btn" id="btn-Domingo" onclick="changeDay('Domingo')">Dom</button>
+        <button class="day-btn active" data-day="Lunes">Lun</button>
+        <button class="day-btn" data-day="Martes">Mar</button>
+        <button class="day-btn" data-day="Miércoles">Mié</button>
+        <button class="day-btn" data-day="Jueves">Jue</button>
+        <button class="day-btn" data-day="Viernes">Vie</button>
+        <button class="day-btn" data-day="Sábado">Sáb</button>
+        <button class="day-btn" data-day="Domingo">Dom</button>
       </div>
     </div>
 
-    <!-- PROGRESO DEL DÍA -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span style="font-weight:bold; font-size:0.9rem;" id="progress-day-label">Progreso de Hoy:</span>
@@ -368,10 +357,9 @@
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progress-fill"></div>
       </div>
-      <button class="action-btn" onclick="shareProgress()">Enviar Mi Avance del Reto</button>
+      <button class="action-btn" id="send-btn">Enviar Mi Avance del Reto</button>
     </div>
 
-    <!-- ENERGÍA Y SUEÑO -->
     <div class="card">
       <div class="card-title">⚡ Nivel de Energía y Sueño</div>
       <div style="margin-bottom: 12px;">
@@ -379,80 +367,76 @@
           <span>Energía actual:</span>
           <span id="energy-val" style="color:var(--accent); font-weight:bold;">50%</span>
         </div>
-        <input type="range" id="energy-range" min="0" max="100" value="50" style="width:100%; accent-color:var(--accent);" oninput="updateEnergy(this.value)">
+        <input type="range" id="energy-range" min="0" max="100" value="50" style="width:100%; accent-color:var(--accent);">
       </div>
       <div>
         <label style="font-size:0.75rem; color:var(--text-muted);">Horas de descanso/sueño:</label>
-        <input type="number" id="sleep-input" placeholder="Ej: 8" oninput="saveData()">
+        <input type="number" id="sleep-input" placeholder="Ej: 8">
       </div>
     </div>
 
-    <!-- RUTINA Y EJERCICIOS -->
     <div class="card">
       <div class="card-title">🏋️‍♀️ Meta / Ejercicio del Día</div>
       <div style="margin-bottom:10px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">Calentamiento / Entrada:</label>
-        <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular 10 min" oninput="saveData()">
+        <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular 10 min">
       </div>
       <div style="margin-bottom:10px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">Ejercicio Principal:</label>
-        <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas" oninput="saveData()">
+        <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas">
       </div>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
         <div>
           <label style="font-size:0.75rem; color:var(--text-muted);">Repeticiones:</label>
-          <input type="text" id="ex-reps-input" placeholder="Ej: 15" oninput="saveData()">
+          <input type="text" id="ex-reps-input" placeholder="Ej: 15">
         </div>
         <div>
           <label style="font-size:0.75rem; color:var(--text-muted);">Series:</label>
-          <input type="text" id="ex-series-input" placeholder="Ej: 4" oninput="saveData()">
+          <input type="text" id="ex-series-input" placeholder="Ej: 4">
         </div>
       </div>
     </div>
 
-    <!-- COMIDAS -->
     <div class="card">
       <div class="card-title">🥗 Hábitos y Alimentación</div>
       <div class="interactive-grid-2">
-        <div class="toggle-box" id="meal-desayuno" onclick="toggleItem('meal-desayuno')">
-          <span style="font-size:0.8rem;">Desayuno Sana</span>
+        <div class="toggle-box" id="meal-desayuno">
+          <span style="font-size:0.8rem; pointer-events:none;">Desayuno Sano</span>
           <div class="check-circle">✓</div>
         </div>
-        <div class="toggle-box" id="meal-almuerzo" onclick="toggleItem('meal-almuerzo')">
-          <span style="font-size:0.8rem;">Almuerzo Bal.</span>
+        <div class="toggle-box" id="meal-almuerzo">
+          <span style="font-size:0.8rem; pointer-events:none;">Almuerzo Bal.</span>
           <div class="check-circle">✓</div>
         </div>
-        <div class="toggle-box" id="meal-merienda" onclick="toggleItem('meal-merienda')">
-          <span style="font-size:0.8rem;">Merienda Sal.</span>
+        <div class="toggle-box" id="meal-merienda">
+          <span style="font-size:0.8rem; pointer-events:none;">Merienda Sal.</span>
           <div class="check-circle">✓</div>
         </div>
-        <div class="toggle-box" id="meal-cena" onclick="toggleItem('meal-cena')">
-          <span style="font-size:0.8rem;">Cena Ligera</span>
+        <div class="toggle-box" id="meal-cena">
+          <span style="font-size:0.8rem; pointer-events:none;">Cena Ligera</span>
           <div class="check-circle">✓</div>
         </div>
       </div>
     </div>
 
-    <!-- MEDICAMENTOS -->
     <div class="card">
       <div class="card-title">💊 Tareas / Suplementos</div>
       <div class="interactive-grid-3">
-        <div class="toggle-box" id="med-manana" onclick="toggleItem('med-manana')" style="flex-direction:column; gap:6px;">
-          <span style="font-size:0.75rem;">Mañana</span>
+        <div class="toggle-box" id="med-manana" style="flex-direction:column; gap:6px;">
+          <span style="font-size:0.75rem; pointer-events:none;">Mañana</span>
           <div class="check-circle">✓</div>
         </div>
-        <div class="toggle-box" id="med-tarde" onclick="toggleItem('med-tarde')" style="flex-direction:column; gap:6px;">
-          <span style="font-size:0.75rem;">Tarde</span>
+        <div class="toggle-box" id="med-tarde" style="flex-direction:column; gap:6px;">
+          <span style="font-size:0.75rem; pointer-events:none;">Tarde</span>
           <div class="check-circle">✓</div>
         </div>
-        <div class="toggle-box" id="med-noche" onclick="toggleItem('med-noche')" style="flex-direction:column; gap:6px;">
-          <span style="font-size:0.75rem;">Noche</span>
+        <div class="toggle-box" id="med-noche" style="flex-direction:column; gap:6px;">
+          <span style="font-size:0.75rem; pointer-events:none;">Noche</span>
           <div class="check-circle">✓</div>
         </div>
       </div>
     </div>
 
-    <!-- AGUA CONSUMIDA -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div class="card-title" style="margin:0;">💧 Consumo de Agua</div>
@@ -461,40 +445,37 @@
       <div class="glasses-grid" id="glasses-container"></div>
     </div>
 
-    <!-- PERFIL Y MEDIDAS -->
     <div class="card">
       <div class="card-title">👤 Registro de Perfil</div>
       <div style="margin-bottom:8px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">Tu Nombre / Apodo:</label>
-        <input type="text" id="user-name-input" value="Tamara Nunia" oninput="updateProfileName(this.value)">
+        <input type="text" id="user-name-input" value="Tamara Nunia">
       </div>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
         <div>
           <label style="font-size:0.75rem; color:var(--text-muted);">Altura (cm):</label>
-          <input type="number" id="height-input" placeholder="165" oninput="saveData()">
+          <input type="number" id="height-input" placeholder="165">
         </div>
         <div>
           <label style="font-size:0.75rem; color:var(--text-muted);">Peso (kg):</label>
-          <input type="number" id="weight-input" placeholder="65" oninput="saveData()">
+          <input type="number" id="weight-input" placeholder="65">
         </div>
       </div>
     </div>
 
-    <!-- ESTADO DE ÁNIMO -->
     <div class="card">
       <div class="card-title">✨ Estado de Ánimo del Día</div>
       <div class="mood-grid">
-        <div class="mood-item" id="mood-😁" onclick="selectMood('😁')">😁</div>
-        <div class="mood-item" id="mood-🙂" onclick="selectMood('🙂')">🙂</div>
-        <div class="mood-item" id="mood-😐" onclick="selectMood('😐')">😐</div>
-        <div class="mood-item" id="mood-😓" onclick="selectMood('😓')">😓</div>
-        <div class="mood-item" id="mood-😴" onclick="selectMood('😴')">😴</div>
+        <div class="mood-item" data-mood="😁">😁</div>
+        <div class="mood-item" data-mood="🙂">🙂</div>
+        <div class="mood-item" data-mood="😐">😐</div>
+        <div class="mood-item" data-mood="😓">😓</div>
+        <div class="mood-item" data-mood="😴">😴</div>
       </div>
     </div>
 
-    <!-- GRÁFICO SEMANAL NATIVO -->
     <div class="card">
-      <div class="card-title">📊 Cumplimiento Semanal del Reto</div>
+      <div class="card-title">📊 Cumplimiento Semanal</div>
       <div class="chart-container" id="chart-container"></div>
     </div>
 
@@ -505,120 +486,130 @@
   </footer>
 
   <script>
-    let activeDay = 'Lunes';
-    let selectedMood = '';
-    let glassesState = [false, false, false, false, false, false, false, false];
-    const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    document.addEventListener('DOMContentLoaded', () => {
+      let activeDay = 'Lunes';
+      let selectedMood = '';
+      let glassesState = [false, false, false, false, false, false, false, false];
+      const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-    function setTheme(hex) {
-      document.documentElement.style.setProperty('--accent', hex);
-      document.documentElement.style.setProperty('--accent-soft', hex + '33');
-      localStorage.setItem('fit_theme', hex);
-      renderChart();
-    }
+      function setTheme(hex) {
+        document.documentElement.style.setProperty('--accent', hex);
+        document.documentElement.style.setProperty('--accent-soft', hex + '33');
+        localStorage.setItem('fit_theme', hex);
+        renderChart();
+      }
 
-    function changeDay(day) {
-      activeDay = day;
-      document.getElementById('current-day-title').innerText = day;
-      document.getElementById('progress-day-label').innerText = 'Progreso: ' + day;
+      function changeDay(day) {
+        activeDay = day;
+        document.getElementById('current-day-title').innerText = day;
+        document.getElementById('progress-day-label').innerText = 'Progreso: ' + day;
 
-      daysList.forEach(d => {
-        const btn = document.getElementById('btn-' + d);
-        if (btn) btn.className = (d === day) ? 'day-btn active' : 'day-btn';
-      });
+        document.querySelectorAll('.day-btn').forEach(btn => {
+          btn.className = (btn.getAttribute('data-day') === day) ? 'day-btn active' : 'day-btn';
+        });
 
-      loadData();
-    }
+        loadData();
+      }
 
-    function toggleItem(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.classList.toggle('active');
+      function toggleGlass(index) {
+        glassesState[index] = !glassesState[index];
+        renderGlasses();
         saveData();
       }
-    }
 
-    function toggleGlass(index) {
-      glassesState[index] = !glassesState[index];
-      renderGlasses();
-      saveData();
-    }
+      function renderGlasses() {
+        const container = document.getElementById('glasses-container');
+        container.innerHTML = '';
+        let count = 0;
 
-    function renderGlasses() {
-      const container = document.getElementById('glasses-container');
-      container.innerHTML = '';
-      let count = 0;
+        glassesState.forEach((isFull, i) => {
+          if (isFull) count++;
+          const div = document.createElement('div');
+          div.className = isFull ? 'glass-item active' : 'glass-item';
+          div.innerText = '🥤';
+          div.addEventListener('click', () => toggleGlass(i));
+          container.appendChild(div);
+        });
 
-      glassesState.forEach((isFull, i) => {
-        if (isFull) count++;
-        const div = document.createElement('div');
-        div.className = isFull ? 'glass-item active' : 'glass-item';
-        div.innerText = '🥤';
-        div.onclick = function() { toggleGlass(i); };
-        container.appendChild(div);
-      });
+        document.getElementById('water-count-text').innerText = count + ' / 8 vasos';
+      }
 
-      document.getElementById('water-count-text').innerText = count + ' / 8 vasos';
-    }
+      function selectMood(mood) {
+        selectedMood = mood;
+        document.querySelectorAll('.mood-item').forEach(el => {
+          if (el.getAttribute('data-mood') === mood) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        });
+        saveData();
+      }
 
-    function updateEnergy(val) {
-      document.getElementById('energy-val').innerText = val + '%';
-      saveData();
-    }
+      function saveData() {
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
+        const toggleStates = {};
 
-    function selectMood(mood) {
-      selectedMood = mood;
-      ['😁', '🙂', '😐', '😓', '😴'].forEach(m => {
-        const el = document.getElementById('mood-' + m);
-        if (el) {
-          if (m === mood) el.classList.add('active');
-          else el.classList.remove('active');
-        }
-      });
-      saveData();
-    }
+        toggles.forEach(id => {
+          const el = document.getElementById(id);
+          toggleStates[id] = el ? el.classList.contains('active') : false;
+        });
 
-    function updateProfileName(val) {
-      document.getElementById('user-display-name').innerText = 'Perfil: ' + (val || 'Tamara Nunia');
-      saveData();
-    }
+        const data = {
+          energy: document.getElementById('energy-range').value,
+          sleep: document.getElementById('sleep-input').value,
+          warmup: document.getElementById('warmup-input').value,
+          exName: document.getElementById('ex-name-input').value,
+          exReps: document.getElementById('ex-reps-input').value,
+          exSeries: document.getElementById('ex-series-input').value,
+          userName: document.getElementById('user-name-input').value,
+          height: document.getElementById('height-input').value,
+          weight: document.getElementById('weight-input').value,
+          mood: selectedMood,
+          glasses: glassesState,
+          toggles: toggleStates
+        };
 
-    function saveData() {
-      const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
-      const toggleStates = {};
-      
-      toggles.forEach(id => {
-        const el = document.getElementById(id);
-        toggleStates[id] = el ? el.classList.contains('active') : false;
-      });
+        localStorage.setItem('fit_data_' + activeDay, JSON.stringify(data));
+        calculateProgress();
+      }
 
-      const data = {
-        energy: document.getElementById('energy-range').value,
-        sleep: document.getElementById('sleep-input').value,
-        warmup: document.getElementById('warmup-input').value,
-        exName: document.getElementById('ex-name-input').value,
-        exReps: document.getElementById('ex-reps-input').value,
-        exSeries: document.getElementById('ex-series-input').value,
-        userName: document.getElementById('user-name-input').value,
-        height: document.getElementById('height-input').value,
-        weight: document.getElementById('weight-input').value,
-        mood: selectedMood,
-        glasses: glassesState,
-        toggles: toggleStates
-      };
+      function loadData() {
+        const raw = localStorage.getItem('fit_data_' + activeDay);
+        const data = raw ? JSON.parse(raw) : null;
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
 
-      localStorage.setItem('fit_data_' + activeDay, JSON.stringify(data));
-      calculateProgress();
-    }
+        if (data) {
+          document.getElementById('energy-range').value = data.energy || 50;
+          document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
+          document.getElementById('sleep-input').value = data.sleep || '';
+          document.getElementById('warmup-input').value = data.warmup || '';
+          document.getElementById('ex-name-input').value = data.exName || '';
+          document.getElementById('ex-reps-input').value = data.exReps || '';
+          document.getElementById('ex-series-input').value = data.exSeries || '';
+          document.getElementById('user-name-input').value = data.userName || 'Tamara Nunia';
+          document.getElementById('height-input').value = data.height || '';
+          document.getElementById('weight-input').value = data.weight || '';
 
-    function loadData() {
-      const raw = localStorage.getItem('fit_data_' + activeDay);
-      const data = raw ? JSON.parse(raw) : null;
+          glassesState = data.glasses || [false, false, false, false, false, false, false, false];
+          selectedMood = data.mood || '';
 
-      const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
-
-      if (data) {
-        document.getElementById('energy-range').value = data.energy || 50;
-        document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
-        document.getElementById('sleep-input').value = data.sleep || '';
-        document.getElementById('warmu
+          if (data.toggles) {
+            toggles.forEach(id => {
+              const el = document.getElementById(id);
+              if (el) {
+                if (data.toggles[id]) el.classList.add('active');
+                else el.classList.remove('active');
+              }
+            });
+          }
+        } else {
+          document.getElementById('energy-range').value = 50;
+          document.getElementById('energy-val').innerText = '50%';
+          document.getElementById('sleep-input').value = '';
+          document.getElementById('warmup-input').value = '';
+          document.getElementById('ex-name-input').value = '';
+          document.getElementById('ex-reps-input').value = '';
+          document.getElementById('ex-series-input').value = '';
+          document.getElementById('height-input').value = '';
+          document.getEl
