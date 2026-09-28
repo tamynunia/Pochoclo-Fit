@@ -3,613 +3,262 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Reto Interactivo - Tamara Nunia</title>
+  <title>PochocloFit - Mi Rutina Interactiva</title>
+  <link rel="manifest" href="manifest.json">
   <style>
     :root {
-      --accent: #22c55e;
-      --accent-soft: rgba(34, 197, 94, 0.2);
       --bg: #0f172a;
       --card-bg: #1e293b;
-      --border: #334155;
+      --primary: #10b981;
+      --primary-hover: #059669;
       --text: #f8fafc;
-      --text-muted: #94a3b8;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      touch-action: manipulation;
+      --subtext: #94a3b8;
+      --border: #334155;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      padding-bottom: 50px;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    header {
-      background-color: #090d16;
-      border-bottom: 1px solid var(--border);
-      padding: 15px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      justify-content: center;
     }
 
-    .brand-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .badge {
-      font-size: 0.65rem;
-      background-color: var(--card-bg);
-      padding: 2px 8px;
-      border-radius: 12px;
-      border: 1px solid var(--accent);
-      color: var(--text);
-    }
-
-    .subtitle {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .share-btn {
-      background-color: var(--card-bg);
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    main {
-      max-width: 550px;
-      margin: 0 auto;
-      padding: 15px;
+    .container {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 20px;
+    }
+
+    .header {
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 50px;
+    }
+
+    .title {
+      font-size: 26px;
+      margin: 5px 0 0 0;
     }
 
     .card {
       background-color: var(--card-bg);
       border-radius: 16px;
-      padding: 16px;
+      padding: 20px;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: bold;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .color-picker {
-      display: flex;
-      gap: 12px;
-    }
-    .color-dot {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      cursor: pointer;
-    }
-
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      margin-top: 8px;
-    }
-    .day-btn {
-      background-color: #090d16;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 10px 0;
-      border-radius: 8px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-    }
-    .day-btn.active {
-      background-color: var(--accent);
-      color: #090d16;
-      border-color: var(--accent);
-    }
-
-    .progress-bar-bg {
-      background-color: #090d16;
-      height: 14px;
-      border-radius: 7px;
-      overflow: hidden;
-      margin: 10px 0;
-    }
-    .progress-bar-fill {
-      background-color: var(--accent);
-      height: 100%;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .action-btn {
-      width: 100%;
-      background-color: var(--accent);
-      color: #090d16;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      cursor: pointer;
-      margin-top: 6px;
-    }
-
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      background-color: #090d16;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      outline: none;
-      margin-top: 4px;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-
-    .interactive-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .interactive-grid-3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-    }
-
-    .toggle-box {
-      background-color: #090d16;
-      border: 1px solid var(--border);
-      padding: 12px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-    .toggle-box.active {
-      border-color: var(--accent);
-      background-color: var(--accent-soft);
-    }
-
-    .check-circle {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid var(--text-muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-      pointer-events: none;
-    }
-    .toggle-box.active .check-circle {
-      background-color: var(--accent);
-      border-color: var(--accent);
-      color: #090d16;
-    }
-
-    .glasses-grid {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 6px;
-      margin-top: 10px;
-    }
-    .glass-item {
-      background-color: #090d16;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 0;
-      text-align: center;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .glass-item.active {
-      border-color: #06b6d4;
-      background-color: rgba(6, 182, 212, 0.2);
-    }
-
-    .mood-grid {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 8px;
-    }
-    .mood-item {
-      font-size: 1.8rem;
-      padding: 8px;
-      background-color: #090d16;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      cursor: pointer;
-      text-align: center;
-      flex: 1;
-      margin: 0 3px;
-    }
-    .mood-item.active {
-      border-color: #ec4899;
-      background-color: rgba(236, 72, 153, 0.2);
-    }
-
-    .chart-container {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      height: 120px;
-      padding-top: 20px;
-      gap: 6px;
-    }
-    .chart-bar-wrapper {
-      flex: 1;
+    .user-section {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      height: 100%;
-      justify-content: flex-end;
-    }
-    .chart-bar {
-      width: 100%;
-      background-color: var(--accent);
-      border-radius: 4px 4px 0 0;
-      min-height: 4px;
-      transition: height 0.3s ease;
-    }
-    .chart-label {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      margin-top: 6px;
+      gap: 8px;
     }
 
-    footer {
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--text-muted);
+    label {
+      font-size: 14px;
+      color: var(--subtext);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: #0f172a;
+      color: var(--text);
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .add-box {
+      display: flex;
+      gap: 10px;
       margin-top: 10px;
-      padding: 10px;
+    }
+
+    button {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: var(--primary);
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background-color: var(--primary-hover);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #0f172a;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .task-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: var(--subtext);
+    }
+
+    .btn-delete {
+      background-color: transparent;
+      color: #ef4444;
+      font-size: 18px;
+      padding: 4px 8px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--subtext);
+      margin-top: auto;
+      padding-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div>
-      <div class="brand-title">⚡ Mi Reto Interactivo <span class="badge">Tamara Nunia</span></div>
-      <div class="subtitle" id="user-display-name">Perfil: Tamara Nunia</div>
+  <div class="container">
+    <div class="header">
+      <div class="logo">🍿🏋️‍♀️</div>
+      <h1 class="title">PochocloFit</h1>
     </div>
-    <button class="share-btn" id="share-btn">Compartir</button>
-  </header>
 
-  <main>
+    <!-- Personalización -->
+    <div class="card user-section">
+      <label for="userName">Tu nombre / Perfil:</label>
+      <input type="text" id="userName" placeholder="Ingresá tu nombre..." oninput="saveUserData()">
+    </div>
 
+    <!-- Lista interactiva de ejercicios -->
     <div class="card">
-      <div class="card-title">🎨 Personalizar Color Visual</div>
-      <div class="color-picker">
-        <div class="color-dot" style="background:#22c55e" data-color="#22c55e"></div>
-        <div class="color-dot" style="background:#3b82f6" data-color="#3b82f6"></div>
-        <div class="color-dot" style="background:#a855f7" data-color="#a855f7"></div>
-        <div class="color-dot" style="background:#ec4899" data-color="#ec4899"></div>
-        <div class="color-dot" style="background:#f97316" data-color="#f97316"></div>
-        <div class="color-dot" style="background:#06b6d4" data-color="#06b6d4"></div>
+      <label>Mis Ejercicios y Tareas:</label>
+      <div class="add-box">
+        <input type="text" id="newTask" placeholder="Ej: 10 Sentadillas, Beber agua...">
+        <button onclick="addTask()">Agregar</button>
       </div>
+
+      <ul id="taskList"></ul>
     </div>
 
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.8rem; color:var(--text-muted);">Día del Reto:</span>
-        <span id="current-day-title" style="font-size:0.85rem; font-weight:bold; color:var(--accent)">Lunes</span>
-      </div>
-      <div class="days-grid">
-        <button class="day-btn active" data-day="Lunes">Lun</button>
-        <button class="day-btn" data-day="Martes">Mar</button>
-        <button class="day-btn" data-day="Miércoles">Mié</button>
-        <button class="day-btn" data-day="Jueves">Jue</button>
-        <button class="day-btn" data-day="Viernes">Vie</button>
-        <button class="day-btn" data-day="Sábado">Sáb</button>
-        <button class="day-btn" data-day="Domingo">Dom</button>
-      </div>
+    <div class="footer" id="footerText">
+      Copyright © 2026 Tamara Nunia. Todos los derechos reservados.
     </div>
-
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-weight:bold; font-size:0.9rem;" id="progress-day-label">Progreso de Hoy:</span>
-        <span style="font-size:0.8rem; font-weight:bold; color:var(--accent);" id="percentage-text">0%</span>
-      </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progress-fill"></div>
-      </div>
-      <button class="action-btn" id="send-btn">Enviar Mi Avance del Reto</button>
-    </div>
-
-    <div class="card">
-      <div class="card-title">⚡ Nivel de Energía y Sueño</div>
-      <div style="margin-bottom: 12px;">
-        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">
-          <span>Energía actual:</span>
-          <span id="energy-val" style="color:var(--accent); font-weight:bold;">50%</span>
-        </div>
-        <input type="range" id="energy-range" min="0" max="100" value="50" style="width:100%; accent-color:var(--accent);">
-      </div>
-      <div>
-        <label style="font-size:0.75rem; color:var(--text-muted);">Horas de descanso/sueño:</label>
-        <input type="number" id="sleep-input" placeholder="Ej: 8">
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🏋️‍♀️ Meta / Ejercicio del Día</div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:0.75rem; color:var(--text-muted);">Calentamiento / Entrada:</label>
-        <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular 10 min">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label style="font-size:0.75rem; color:var(--text-muted);">Ejercicio Principal:</label>
-        <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas">
-      </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-        <div>
-          <label style="font-size:0.75rem; color:var(--text-muted);">Repeticiones:</label>
-          <input type="text" id="ex-reps-input" placeholder="Ej: 15">
-        </div>
-        <div>
-          <label style="font-size:0.75rem; color:var(--text-muted);">Series:</label>
-          <input type="text" id="ex-series-input" placeholder="Ej: 4">
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🥗 Hábitos y Alimentación</div>
-      <div class="interactive-grid-2">
-        <div class="toggle-box" id="meal-desayuno">
-          <span style="font-size:0.8rem; pointer-events:none;">Desayuno Sano</span>
-          <div class="check-circle">✓</div>
-        </div>
-        <div class="toggle-box" id="meal-almuerzo">
-          <span style="font-size:0.8rem; pointer-events:none;">Almuerzo Bal.</span>
-          <div class="check-circle">✓</div>
-        </div>
-        <div class="toggle-box" id="meal-merienda">
-          <span style="font-size:0.8rem; pointer-events:none;">Merienda Sal.</span>
-          <div class="check-circle">✓</div>
-        </div>
-        <div class="toggle-box" id="meal-cena">
-          <span style="font-size:0.8rem; pointer-events:none;">Cena Ligera</span>
-          <div class="check-circle">✓</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">💊 Tareas / Suplementos</div>
-      <div class="interactive-grid-3">
-        <div class="toggle-box" id="med-manana" style="flex-direction:column; gap:6px;">
-          <span style="font-size:0.75rem; pointer-events:none;">Mañana</span>
-          <div class="check-circle">✓</div>
-        </div>
-        <div class="toggle-box" id="med-tarde" style="flex-direction:column; gap:6px;">
-          <span style="font-size:0.75rem; pointer-events:none;">Tarde</span>
-          <div class="check-circle">✓</div>
-        </div>
-        <div class="toggle-box" id="med-noche" style="flex-direction:column; gap:6px;">
-          <span style="font-size:0.75rem; pointer-events:none;">Noche</span>
-          <div class="check-circle">✓</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div class="card-title" style="margin:0;">💧 Consumo de Agua</div>
-        <span id="water-count-text" style="font-size:0.8rem; color:#06b6d4; font-weight:bold;">0 / 8 vasos</span>
-      </div>
-      <div class="glasses-grid" id="glasses-container"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">👤 Registro de Perfil</div>
-      <div style="margin-bottom:8px;">
-        <label style="font-size:0.75rem; color:var(--text-muted);">Tu Nombre / Apodo:</label>
-        <input type="text" id="user-name-input" value="Tamara Nunia">
-      </div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-        <div>
-          <label style="font-size:0.75rem; color:var(--text-muted);">Altura (cm):</label>
-          <input type="number" id="height-input" placeholder="165">
-        </div>
-        <div>
-          <label style="font-size:0.75rem; color:var(--text-muted);">Peso (kg):</label>
-          <input type="number" id="weight-input" placeholder="65">
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">✨ Estado de Ánimo del Día</div>
-      <div class="mood-grid">
-        <div class="mood-item" data-mood="😁">😁</div>
-        <div class="mood-item" data-mood="🙂">🙂</div>
-        <div class="mood-item" data-mood="😐">😐</div>
-        <div class="mood-item" data-mood="😓">😓</div>
-        <div class="mood-item" data-mood="😴">😴</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📊 Cumplimiento Semanal</div>
-      <div class="chart-container" id="chart-container"></div>
-    </div>
-
-  </main>
-
-  <footer>
-    <p>© 2026 Tamara Nunia. Reservados todos los derechos.</p>
-  </footer>
+  </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      let activeDay = 'Lunes';
-      let selectedMood = '';
-      let glassesState = [false, false, false, false, false, false, false, false];
-      const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    let tasks = JSON.parse(localStorage.getItem('pochoclo_tasks')) || [
+      { text: "Sentadillas con peso (3x10)", done: false },
+      { text: "Press de banca (3x8)", done: true },
+      { text: "Tomar 2L de agua", done: false }
+    ];
 
-      function setTheme(hex) {
-        document.documentElement.style.setProperty('--accent', hex);
-        document.documentElement.style.setProperty('--accent-soft', hex + '33');
-        localStorage.setItem('fit_theme', hex);
-        renderChart();
-      }
+    document.getElementById('userName').value = localStorage.getItem('pochoclo_user') || 'Tamara Nunia';
 
-      function changeDay(day) {
-        activeDay = day;
-        document.getElementById('current-day-title').innerText = day;
-        document.getElementById('progress-day-label').innerText = 'Progreso: ' + day;
+    function saveUserData() {
+      const name = document.getElementById('userName').value;
+      localStorage.setItem('pochoclo_user', name);
+    }
 
-        document.querySelectorAll('.day-btn').forEach(btn => {
-          btn.className = (btn.getAttribute('data-day') === day) ? 'day-btn active' : 'day-btn';
-        });
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'task-info';
+        infoDiv.onclick = () => toggleTask(index);
 
-        loadData();
-      }
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.done;
 
-      function toggleGlass(index) {
-        glassesState[index] = !glassesState[index];
-        renderGlasses();
-        saveData();
-      }
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        if (task.done) span.className = 'completed';
 
-      function renderGlasses() {
-        const container = document.getElementById('glasses-container');
-        container.innerHTML = '';
-        let count = 0;
+        infoDiv.appendChild(checkbox);
+        infoDiv.appendChild(span);
 
-        glassesState.forEach((isFull, i) => {
-          if (isFull) count++;
-          const div = document.createElement('div');
-          div.className = isFull ? 'glass-item active' : 'glass-item';
-          div.innerText = '🥤';
-          div.addEventListener('click', () => toggleGlass(i));
-          container.appendChild(div);
-        });
-
-        document.getElementById('water-count-text').innerText = count + ' / 8 vasos';
-      }
-
-      function selectMood(mood) {
-        selectedMood = mood;
-        document.querySelectorAll('.mood-item').forEach(el => {
-          if (el.getAttribute('data-mood') === mood) {
-            el.classList.add('active');
-          } else {
-            el.classList.remove('active');
-          }
-        });
-        saveData();
-      }
-
-      function saveData() {
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
-        const toggleStates = {};
-
-        toggles.forEach(id => {
-          const el = document.getElementById(id);
-          toggleStates[id] = el ? el.classList.contains('active') : false;
-        });
-
-        const data = {
-          energy: document.getElementById('energy-range').value,
-          sleep: document.getElementById('sleep-input').value,
-          warmup: document.getElementById('warmup-input').value,
-          exName: document.getElementById('ex-name-input').value,
-          exReps: document.getElementById('ex-reps-input').value,
-          exSeries: document.getElementById('ex-series-input').value,
-          userName: document.getElementById('user-name-input').value,
-          height: document.getElementById('height-input').value,
-          weight: document.getElementById('weight-input').value,
-          mood: selectedMood,
-          glasses: glassesState,
-          toggles: toggleStates
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete';
+        deleteBtn.innerHTML = '🗑️';
+        deleteBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteTask(index);
         };
 
-        localStorage.setItem('fit_data_' + activeDay, JSON.stringify(data));
-        calculateProgress();
+        li.appendChild(infoDiv);
+        li.appendChild(deleteBtn);
+        list.appendChild(li);
+      });
+
+      localStorage.setItem('pochoclo_tasks', JSON.stringify(tasks));
+    }
+
+    function addTask() {
+      const input = document.getElementById('newTask');
+      const text = input.value.trim();
+      if (text !== '') {
+        tasks.push({ text: text, done: false });
+        input.value = '';
+        renderTasks();
       }
+    }
 
-      function loadData() {
-        const raw = localStorage.getItem('fit_data_' + activeDay);
-        const data = raw ? JSON.parse(raw) : null;
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
+    function toggleTask(index) {
+      tasks[index].done = !tasks[index].done;
+      renderTasks();
+    }
 
-        if (data) {
-          document.getElementById('energy-range').value = data.energy || 50;
-          document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
-          document.getElementById('sleep-input').value = data.sleep || '';
-          document.getElementById('warmup-input').value = data.warmup || '';
-          document.getElementById('ex-name-input').value = data.exName || '';
-          document.getElementById('ex-reps-input').value = data.exReps || '';
-          document.getElementById('ex-series-input').value = data.exSeries || '';
-          document.getElementById('user-name-input').value = data.userName || 'Tamara Nunia';
-          document.getElementById('height-input').value = data.height || '';
-          document.getElementById('weight-input').value = data.weight || '';
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
 
-          glassesState = data.glasses || [false, false, false, false, false, false, false, false];
-          selectedMood = data.mood || '';
-
-          if (data.toggles) {
-            toggles.forEach(id => {
-              const el = document.getElementById(id);
-              if (el) {
-                if (data.toggles[id]) el.classList.add('active');
-                else el.classList.remove('active');
-              }
-            });
-          }
-        } else {
-          document.getElementById('energy-range').value = 50;
-          document.getElementById('energy-val').innerText = '50%';
-          document.getElementById('sleep-input').value = '';
-          document.getElementById('warmup-input').value = '';
-          document.getElementById('ex-name-input').value = '';
-          document.getElementById('ex-reps-input').value = '';
-          document.getElementById('ex-series-input').value = '';
-          document.getElementById('height-input').value = '';
-          document.getElementById('weight-input').value = '';
-          glassesState = [false, false, false, false, false, false, false, false];
-          selectedMood = '';
-
-          toggles.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) e
+    renderTasks();
+  </script>
+</body>
+</html>
