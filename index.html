@@ -1,6 +1,6 @@
 <!-- 
   ========================================================================
-  COPYRIGHT & DERECHOS DE AUTOR
+  DERECHOS DE AUTOR Y PROPIEDAD INTELECTUAL
   © 2026 Tamara Nunia. Reservados todos los derechos.
   ========================================================================
 -->
@@ -8,360 +8,620 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitLife App - Creado por Tamara Nunia</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FitLife App - Tamara Nunia</title>
   <style>
     :root {
-      --theme-color: #22c55e;
-      --theme-border: #22c55e66;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
     }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
-      background-color: #0f172a;
-      color: #f8fafc;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding-bottom: 50px;
     }
+
+    header {
+      background-color: #090d16;
+      border-bottom: 1px solid var(--border);
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      background-color: var(--card-bg);
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--accent);
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .share-btn {
+      background-color: var(--card-bg);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    main {
+      max-width: 550px;
+      margin: 0 auto;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
     .card {
-      background: #1e293b;
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    .custom-check {
-      width: 28px;
-      height: 28px;
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* THEMES */
+    .color-picker {
+      display: flex;
+      gap: 12px;
+    }
+    .color-dot {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      border: 2px solid #64748b;
+      border: 2px solid #fff;
+      cursor: pointer;
+    }
+
+    /* DAYS SELECTOR */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .day-btn {
+      background-color: #090d16;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 0;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+    }
+    .day-btn.active {
+      background-color: var(--accent);
+      color: #090d16;
+      border-color: var(--accent);
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar-bg {
+      background-color: #090d16;
+      height: 14px;
+      border-radius: 7px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress-bar-fill {
+      background-color: var(--accent);
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .action-btn {
+      width: 100%;
+      background-color: var(--accent);
+      color: #090d16;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    /* INPUTS */
+    input[type="text"], input[type="number"], textarea {
+      width: 100%;
+      background-color: #090d16;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      outline: none;
+      margin-top: 4px;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    /* GRID MEALS & MEDS */
+    .interactive-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .interactive-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .toggle-box {
+      background-color: #090d16;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-box.active {
+      border-color: var(--accent);
+      background-color: var(--accent-soft);
+    }
+
+    .check-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s ease;
-      pointer-events: none;
+      font-size: 12px;
+      font-weight: bold;
     }
-    .custom-check.checked {
-      background-color: var(--theme-color);
-      border-color: var(--theme-color);
-      color: #ffffff;
+    .toggle-box.active .check-circle {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #090d16;
     }
-    .theme-accent-text { color: var(--theme-color) !important; }
-    .theme-accent-bg { background-color: var(--theme-color) !important; }
-    .theme-accent-border { border-color: var(--theme-border) !important; }
-    
-    .glass-svg {
+
+    /* GLASSES */
+    .glasses-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .glass-item {
+      background-color: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 0;
+      text-align: center;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      font-size: 1.2rem;
+      user-select: none;
     }
-    .glass-svg:hover {
-      transform: scale(1.1);
+    .glass-item.active {
+      border-color: #06b6d4;
+      background-color: rgba(6, 182, 212, 0.2);
+    }
+
+    /* MOODS */
+    .mood-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .mood-item {
+      font-size: 1.8rem;
+      padding: 8px;
+      background-color: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      flex: 1;
+      margin: 0 3px;
+    }
+    .mood-item.active {
+      border-color: #ec4899;
+      background-color: rgba(236, 72, 153, 0.2);
+    }
+
+    /* CUSTOM BAR CHART */
+    .chart-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 120px;
+      padding-top: 20px;
+      gap: 6px;
+    }
+    .chart-bar-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .chart-bar {
+      width: 100%;
+      background-color: var(--accent);
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 0.3s ease;
+    }
+    .chart-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+      padding: 10px;
     }
   </style>
 </head>
-<body class="pb-16">
+<body>
 
-  <!-- ENCABEZADO -->
-  <header class="p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
-    <div class="max-w-xl mx-auto flex justify-between items-center">
-      <div>
-        <h1 class="text-xl font-bold theme-accent-text flex items-center gap-2">
-          ⚡ FitLife <span class="text-xs px-2 py-0.5 bg-slate-800 theme-accent-text rounded-full border theme-accent-border">By Tamara Nunia</span>
-        </h1>
-        <p class="text-xs text-slate-400" id="user-display-name">Perfil: Tamara Nunia</p>
-      </div>
-      <button onclick="shareProgress()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 theme-accent-text font-semibold flex items-center gap-1.5">
-        <i class="fa-solid fa-share-nodes"></i> Compartir
-      </button>
+  <header>
+    <div>
+      <div class="brand-title">⚡ FitLife <span class="badge">By Tamara Nunia</span></div>
+      <div class="subtitle" id="user-display-name">Perfil: Tamara Nunia</div>
     </div>
+    <button class="share-btn" onclick="shareProgress()">Compartir</button>
   </header>
 
-  <main class="max-w-xl mx-auto p-4 space-y-6">
+  <main>
 
-    <!-- PERSONALIZAR COLOR -->
-    <section class="card space-y-3 border theme-accent-border">
-      <h3 class="font-bold text-slate-200 text-xs flex items-center gap-2">
-        <i class="fa-solid fa-palette theme-accent-text"></i> Color Visual:
-      </h3>
-      <div class="flex gap-3 justify-start items-center">
-        <button onclick="setAppTheme('#22c55e')" class="w-8 h-8 rounded-full bg-green-500 border-2 border-white hover:scale-110 transition"></button>
-        <button onclick="setAppTheme('#3b82f6')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white hover:scale-110 transition"></button>
-        <button onclick="setAppTheme('#a855f7')" class="w-8 h-8 rounded-full bg-purple-500 border-2 border-white hover:scale-110 transition"></button>
-        <button onclick="setAppTheme('#ec4899')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white hover:scale-110 transition"></button>
-        <button onclick="setAppTheme('#f97316')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white hover:scale-110 transition"></button>
-        <button onclick="setAppTheme('#06b6d4')" class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-white hover:scale-110 transition"></button>
+    <!-- PALETA DE COLORES -->
+    <div class="card">
+      <div class="card-title">🎨 Personalizar Color Visual</div>
+      <div class="color-picker">
+        <div class="color-dot" style="background:#22c55e" onclick="setTheme('#22c55e')"></div>
+        <div class="color-dot" style="background:#3b82f6" onclick="setTheme('#3b82f6')"></div>
+        <div class="color-dot" style="background:#a855f7" onclick="setTheme('#a855f7')"></div>
+        <div class="color-dot" style="background:#ec4899" onclick="setTheme('#ec4899')"></div>
+        <div class="color-dot" style="background:#f97316" onclick="setTheme('#f97316')"></div>
+        <div class="color-dot" style="background:#06b6d4" onclick="setTheme('#06b6d4')"></div>
       </div>
-    </section>
+    </div>
 
-    <!-- SELECTOR DE DÍA -->
-    <section class="card space-y-2">
-      <div class="flex justify-between items-center">
-        <span class="text-xs font-semibold text-slate-400">Día de registro:</span>
-        <span class="text-xs theme-accent-text font-bold" id="current-day-label">Lunes</span>
+    <!-- SELECTOR DE DÍAS -->
+    <div class="card">
+      <div style="display:flex; justify-between; align-items:center;">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Seleccionar día:</span>
+        <span id="current-day-title" style="font-size:0.85rem; font-weight:bold; color:var(--accent)">Lunes</span>
       </div>
-      <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold" id="day-buttons">
-        <button onclick="selectDay('Lunes')" id="btn-Lunes" class="day-btn py-2.5 theme-accent-bg text-slate-900 rounded-lg">Lun</button>
-        <button onclick="selectDay('Martes')" id="btn-Martes" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Mar</button>
-        <button onclick="selectDay('Miércoles')" id="btn-Miércoles" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Mié</button>
-        <button onclick="selectDay('Jueves')" id="btn-Jueves" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Jue</button>
-        <button onclick="selectDay('Viernes')" id="btn-Viernes" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Vie</button>
-        <button onclick="selectDay('Sábado')" id="btn-Sábado" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Sáb</button>
-        <button onclick="selectDay('Domingo')" id="btn-Domingo" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Dom</button>
+      <div class="days-grid">
+        <button class="day-btn active" id="btn-Lunes" onclick="changeDay('Lunes')">Lun</button>
+        <button class="day-btn" id="btn-Martes" onclick="changeDay('Martes')">Mar</button>
+        <button class="day-btn" id="btn-Miércoles" onclick="changeDay('Miércoles')">Mié</button>
+        <button class="day-btn" id="btn-Jueves" onclick="changeDay('Jueves')">Jue</button>
+        <button class="day-btn" id="btn-Viernes" onclick="changeDay('Viernes')">Vie</button>
+        <button class="day-btn" id="btn-Sábado" onclick="changeDay('Sábado')">Sáb</button>
+        <button class="day-btn" id="btn-Domingo" onclick="changeDay('Domingo')">Dom</button>
       </div>
-    </section>
+    </div>
 
-    <!-- PROGRESO GENERAL Y ACCIÓN DE COMPARTIR -->
-    <section class="card bg-slate-800/50 border theme-accent-border space-y-3">
-      <div class="flex justify-between items-center">
-        <h2 class="text-base font-bold text-slate-200" id="today-header">Hoy: Lunes</h2>
-        <span class="text-xs px-2.5 py-1 bg-slate-800 theme-accent-text rounded-full font-bold border border-slate-700" id="overall-percentage-text">0% Completado 💚</span>
+    <!-- PROGRESO DEL DÍA -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-weight:bold; font-size:0.9rem;" id="progress-day-label">Progreso de Hoy:</span>
+        <span style="font-size:0.8rem; font-weight:bold; color:var(--accent);" id="percentage-text">0%</span>
       </div>
-      <div class="w-full bg-slate-700 h-3.5 rounded-full overflow-hidden">
-        <div id="overall-progress-bar" class="theme-accent-bg h-full transition-all duration-300" style="width: 0%;"></div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
       </div>
-      <button onclick="shareProgress()" class="w-full mt-1 py-2 theme-accent-bg text-slate-900 font-bold rounded-lg text-xs flex items-center justify-center gap-2 hover:opacity-90 transition">
-        <i class="fa-solid fa-paper-plane"></i> Enviar Mi Avance a Mis Amigos
-      </button>
-    </section>
+      <button class="action-btn" onclick="shareProgress()">Enviar Mi Avance por WhatsApp / Chat</button>
+    </div>
 
-    <!-- ENERGÍA Y DESCANSO -->
-    <section class="card space-y-4">
-      <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-bolt text-yellow-400"></i> Nivel de Energía y Sueño
-      </h3>
-      <div>
-        <label class="text-xs text-slate-400 flex justify-between">
-          <span>¿Cómo te sientes hoy? (Energía)</span>
-          <span id="energy-val" class="font-bold text-yellow-400">50%</span>
-        </label>
-        <input type="range" id="energy-range" min="0" max="100" value="50" class="w-full mt-2 accent-yellow-400 cursor-pointer" oninput="updateEnergy(this.value)">
+    <!-- ENERGÍA Y SUEÑO -->
+    <div class="card">
+      <div class="card-title">⚡ Nivel de Energía y Sueño</div>
+      <div style="margin-bottom: 12px;">
+        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-bottom:4px;">
+          <span>Energía actual:</span>
+          <span id="energy-val" style="color:var(--accent); font-weight:bold;">50%</span>
+        </div>
+        <input type="range" id="energy-range" min="0" max="100" value="50" style="width:100%; accent-color:var(--accent);" oninput="updateEnergy(this.value)">
       </div>
       <div>
-        <label class="text-xs text-slate-400 block mb-1">Horas de descanso/sueño:</label>
-        <input type="number" id="sleep-hours" placeholder="Ej: 8" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" oninput="saveCurrentData()">
+        <label style="font-size:0.75rem; color:var(--text-muted);">Horas de descanso/sueño:</label>
+        <input type="number" id="sleep-input" placeholder="Ej: 8" oninput="saveData()">
       </div>
-    </section>
+    </div>
 
-    <!-- RUTINA DE ENTRENAMIENTO -->
-    <section class="card space-y-4">
-      <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-dumbbell theme-accent-text"></i> Rutina del Día
-      </h3>
-
-      <div class="p-3 bg-slate-800/80 rounded-xl space-y-1 border border-orange-500/20">
-        <span class="text-xs font-bold text-orange-400">🔥 Entrada en Calor:</span>
-        <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular + 10 min cinta" class="w-full bg-transparent text-xs text-slate-300 border-b border-slate-700 focus:outline-none py-1" oninput="saveCurrentData()">
+    <!-- RUTINA Y EJERCICIOS -->
+    <div class="card">
+      <div class="card-title">🏋️‍♀️ Rutina de Ejercicio</div>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:0.75rem; color:var(--text-muted);">Entrada en calor:</label>
+        <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular 10 min" oninput="saveData()">
       </div>
-
-      <div class="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-3">
-        <span class="text-xs font-bold theme-accent-text block"><i class="fa-solid fa-pen-to-square"></i> Registro de Ejercicio Principal</span>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:0.75rem; color:var(--text-muted);">Ejercicio Principal:</label>
+        <input type="text" id="ex-name-input" placeholder="Ej: Sentadilla búlgara" oninput="saveData()">
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
         <div>
-          <label class="text-[11px] text-slate-400">Nombre del Ejercicio:</label>
-          <input type="text" id="ex-name" placeholder="Ej: Sentadillas / Sentadilla Búlgara" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 mt-0.5" oninput="saveCurrentData()">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="text-[11px] text-slate-400">Cantidad / Repeticiones:</label>
-            <input type="text" id="ex-reps" placeholder="Ej: 12 repeticiones" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 mt-0.5" oninput="saveCurrentData()">
-          </div>
-          <div>
-            <label class="text-[11px] text-slate-400">Series:</label>
-            <input type="text" id="ex-series" placeholder="Ej: 4 series" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 mt-0.5" oninput="saveCurrentData()">
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-xs text-slate-400 block mb-1">Día de descanso o nota de ejercicio:</label>
-        <input type="text" id="rest-cardio-note" placeholder="Ej: Caminata / Reposo total / Yoga" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-xs text-slate-200 focus:outline-none" oninput="saveCurrentData()">
-      </div>
-    </section>
-
-    <!-- ALIMENTACIÓN Y MEDICAMENTOS (100% INTERACTIVO) -->
-    <section class="card space-y-4">
-      <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-utensils text-blue-400"></i> Comidas y Medicamentos
-      </h3>
-
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        <div onclick="toggleCheck('meal-1')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
-          <span class="font-medium text-slate-200">Desayuno</span>
-          <div id="meal-1" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-        </div>
-        <div onclick="toggleCheck('meal-2')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
-          <span class="font-medium text-slate-200">Almuerzo</span>
-          <div id="meal-2" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-        </div>
-        <div onclick="toggleCheck('meal-3')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
-          <span class="font-medium text-slate-200">Merienda</span>
-          <div id="meal-3" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-        </div>
-        <div onclick="toggleCheck('meal-4')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
-          <span class="font-medium text-slate-200">Cena</span>
-          <div id="meal-4" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-        </div>
-      </div>
-
-      <div class="space-y-2 pt-2 border-t border-slate-800">
-        <span class="text-xs font-semibold text-slate-400">💊 Medicamentos / Suplementos:</span>
-        <div class="grid grid-cols-3 gap-2 text-xs">
-          <div onclick="toggleCheck('med-1')" class="p-2.5 bg-slate-800 hover:bg-slate-700/80 rounded-xl text-center space-y-1.5 cursor-pointer border border-slate-700 flex flex-col items-center">
-            <span class="text-slate-200">Mañana</span>
-            <div id="med-1" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-          </div>
-          <div onclick="toggleCheck('med-2')" class="p-2.5 bg-slate-800 hover:bg-slate-700/80 rounded-xl text-center space-y-1.5 cursor-pointer border border-slate-700 flex flex-col items-center">
-            <span class="text-slate-200">Tarde</span>
-            <div id="med-2" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-          </div>
-          <div onclick="toggleCheck('med-3')" class="p-2.5 bg-slate-800 hover:bg-slate-700/80 rounded-xl text-center space-y-1.5 cursor-pointer border border-slate-700 flex flex-col items-center">
-            <span class="text-slate-200">Noche</span>
-            <div id="med-3" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- HIDRATACIÓN EN VASOS -->
-    <section class="card space-y-3">
-      <div class="flex justify-between items-center">
-        <h3 class="font-bold text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-glass-water text-cyan-400"></i> Agua Consumida
-        </h3>
-        <span class="text-xs text-cyan-400 font-bold" id="water-count">0 / 8 vasos</span>
-      </div>
-      <p class="text-[11px] text-slate-400">Toca cada vaso para llenarlo/vaciarlo:</p>
-      
-      <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 pt-2" id="glasses-container">
-        <!-- Renderizado JS -->
-      </div>
-    </section>
-
-    <!-- CONFIGURACIÓN DE PERFIL Y MEDIDAS -->
-    <section class="card space-y-4">
-      <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-id-card text-purple-400"></i> Perfil y Medidas Corporales
-      </h3>
-      <div class="grid grid-cols-2 gap-3 text-xs">
-        <div class="col-span-2">
-          <label class="text-slate-400">Tu Nombre o Apodo (para compartir):</label>
-          <input type="text" id="user-name" value="Tamara Nunia" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1 font-bold" oninput="updateUserName(this.value)">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Repeticiones:</label>
+          <input type="text" id="ex-reps-input" placeholder="Ej: 12" oninput="saveData()">
         </div>
         <div>
-          <label class="text-slate-400">Altura (cm)</label>
-          <input type="number" id="user-height" placeholder="165" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Series:</label>
+          <input type="text" id="ex-series-input" placeholder="Ej: 4" oninput="saveData()">
+        </div>
+      </div>
+    </div>
+
+    <!-- COMIDAS -->
+    <div class="card">
+      <div class="card-title">🥗 Comidas del Día</div>
+      <div class="interactive-grid-2">
+        <div class="toggle-box" id="meal-desayuno" onclick="toggleItem('meal-desayuno')">
+          <span style="font-size:0.8rem;">Desayuno</span>
+          <div class="check-circle">✓</div>
+        </div>
+        <div class="toggle-box" id="meal-almuerzo" onclick="toggleItem('meal-almuerzo')">
+          <span style="font-size:0.8rem;">Almuerzo</span>
+          <div class="check-circle">✓</div>
+        </div>
+        <div class="toggle-box" id="meal-merienda" onclick="toggleItem('meal-merienda')">
+          <span style="font-size:0.8rem;">Merienda</span>
+          <div class="check-circle">✓</div>
+        </div>
+        <div class="toggle-box" id="meal-cena" onclick="toggleItem('meal-cena')">
+          <span style="font-size:0.8rem;">Cena</span>
+          <div class="check-circle">✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEDICAMENTOS -->
+    <div class="card">
+      <div class="card-title">💊 Medicamentos / Suplementos</div>
+      <div class="interactive-grid-3">
+        <div class="toggle-box" id="med-manana" onclick="toggleItem('med-manana')" style="flex-direction:column; gap:6px;">
+          <span style="font-size:0.75rem;">Mañana</span>
+          <div class="check-circle">✓</div>
+        </div>
+        <div class="toggle-box" id="med-tarde" onclick="toggleItem('med-tarde')" style="flex-direction:column; gap:6px;">
+          <span style="font-size:0.75rem;">Tarde</span>
+          <div class="check-circle">✓</div>
+        </div>
+        <div class="toggle-box" id="med-noche" onclick="toggleItem('med-noche')" style="flex-direction:column; gap:6px;">
+          <span style="font-size:0.75rem;">Noche</span>
+          <div class="check-circle">✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGUA CONSUMIDA -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="card-title" style="margin:0;">💧 Consumo de Agua</div>
+        <span id="water-count-text" style="font-size:0.8rem; color:#06b6d4; font-weight:bold;">0 / 8 vasos</span>
+      </div>
+      <div class="glasses-grid" id="glasses-container">
+        <!-- Generado por JS -->
+      </div>
+    </div>
+
+    <!-- PERFIL Y MEDIDAS -->
+    <div class="card">
+      <div class="card-title">👤 Perfil y Medidas</div>
+      <div style="margin-bottom:8px;">
+        <label style="font-size:0.75rem; color:var(--text-muted);">Tu Nombre / Apodo:</label>
+        <input type="text" id="user-name-input" value="Tamara Nunia" oninput="updateProfileName(this.value)">
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <div>
+          <label style="font-size:0.75rem; color:var(--text-muted);">Altura (cm):</label>
+          <input type="number" id="height-input" placeholder="165" oninput="saveData()">
         </div>
         <div>
-          <label class="text-slate-400">Peso Actual (kg)</label>
-          <input type="number" id="user-weight" placeholder="65" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
-        </div>
-        <div>
-          <label class="text-slate-400">Pecho / Caderas (cm)</label>
-          <input type="number" id="measure-chest" placeholder="90" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
-        </div>
-        <div>
-          <label class="text-slate-400">Cintura (cm)</label>
-          <input type="number" id="measure-waist" placeholder="70" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <label style="font-size:0.75rem; color:var(--text-muted);">Peso (kg):</label>
+          <input type="number" id="weight-input" placeholder="65" oninput="saveData()">
         </div>
       </div>
-    </section>
+    </div>
 
-    <!-- ESTADO DE ÁNIMO Y NOTAS -->
-    <section class="card space-y-4">
-      <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-heart text-pink-400"></i> Estado de Ánimo y Cierre
-      </h3>
-      <div>
-        <label class="text-xs text-slate-400 block mb-2">Selecciona tu estado de ánimo:</label>
-        <div class="flex justify-between text-2xl" id="mood-selector">
-          <button onclick="selectMood('😁', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😁</button>
-          <button onclick="selectMood('🙂', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">🙂</button>
-          <button onclick="selectMood('😐', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😐</button>
-          <button onclick="selectMood('😓', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😓</button>
-          <button onclick="selectMood('😴', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😴</button>
-        </div>
+    <!-- ESTADO DE ÁNIMO -->
+    <div class="card">
+      <div class="card-title">✨ Estado de Ánimo de Hoy</div>
+      <div class="mood-grid">
+        <div class="mood-item" id="mood-😁" onclick="selectMood('😁')">😁</div>
+        <div class="mood-item" id="mood-🙂" onclick="selectMood('🙂')">🙂</div>
+        <div class="mood-item" id="mood-😐" onclick="selectMood('😐')">😐</div>
+        <div class="mood-item" id="mood-😓" onclick="selectMood('😓')">😓</div>
+        <div class="mood-item" id="mood-😴" onclick="selectMood('😴')">😴</div>
       </div>
+    </div>
 
-      <div class="space-y-2">
-        <label class="text-xs text-slate-400">✨ 3 Agradecimientos de hoy:</label>
-        <input type="text" id="thanks-1" placeholder="1. Mi salud" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
-        <input type="text" id="thanks-2" placeholder="2. Mi entrenamiento" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
-        <input type="text" id="thanks-3" placeholder="3. Mi descanso" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
+    <!-- GRÁFICO SEMANAL NATIVO -->
+    <div class="card">
+      <div class="card-title">📊 Cumplimiento Semanal</div>
+      <div class="chart-container" id="chart-container">
+        <!-- Renderizado por JS -->
       </div>
-
-      <div>
-        <label class="text-xs text-slate-400">Notas adicionales:</label>
-        <textarea id="daily-notes" placeholder="Pensamientos del día..." class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs mt-1 h-16" oninput="saveCurrentData()"></textarea>
-      </div>
-    </section>
-
-    <!-- GRÁFICO SEMANAL -->
-    <section class="card space-y-4">
-      <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-chart-line theme-accent-text"></i> Avance Semanal
-      </h3>
-      <div class="relative w-full h-64">
-        <canvas id="weeklyChart"></canvas>
-      </div>
-    </section>
-
-    <!-- FOOTER DE COPYRIGHT -->
-    <section class="card bg-slate-900 border border-slate-800 text-center space-y-2">
-      <p class="text-xs text-slate-300 font-semibold flex items-center justify-center gap-2">
-        <i class="fa-solid fa-shield-halved theme-accent-text"></i>
-        <span>Aplicación Creada por Tamara Nunia</span>
-      </p>
-      <p class="text-[10px] text-slate-500">
-        © 2026 Tamara Nunia. Todos los derechos reservados.
-      </p>
-    </section>
+    </div>
 
   </main>
 
-  <!-- LÓGICA DE JAVASCRIPT SIN ERRORES -->
-  <script>
-    let currentDay = 'Lunes';
-    let selectedMood = '';
-    let chartInstance = null;
-    let activeThemeColor = '#22c55e';
-    let waterGlasses = [false, false, false, false, false, false, false, false];
+  <footer>
+    <p>© 2026 Tamara Nunia. Reservados todos los derechos.</p>
+  </footer>
 
-    function setAppTheme(colorHex) {
-      activeThemeColor = colorHex;
-      document.documentElement.style.setProperty('--theme-color', colorHex);
-      document.documentElement.style.setProperty('--theme-border', colorHex + '66');
-      localStorage.setItem('fitLife_themeColor', colorHex);
-      updateChart();
+  <script>
+    let activeDay = 'Lunes';
+    let selectedMood = '';
+    let glassesState = [false, false, false, false, false, false, false, false];
+    const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+    function setTheme(hex) {
+      document.documentElement.style.setProperty('--accent', hex);
+      document.documentElement.style.setProperty('--accent-soft', hex + '33');
+      localStorage.setItem('fit_theme', hex);
+      renderChart();
     }
 
-    function selectDay(day) {
-      currentDay = day;
-      document.getElementById('current-day-label').innerText = day;
-      document.getElementById('today-header').innerText = `Hoy: ${day}`;
+    function changeDay(day) {
+      activeDay = day;
+      document.getElementById('current-day-title').innerText = day;
+      document.getElementById('progress-day-label').innerText = 'Progreso: ' + day;
 
-      document.querySelectorAll('.day-btn').forEach(btn => {
-        btn.className = 'day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400';
+      daysList.forEach(d => {
+        const btn = document.getElementById('btn-' + d);
+        if (btn) btn.className = (d === day) ? 'day-btn active' : 'day-btn';
       });
 
-      const activeBtn = document.getElementById(`btn-${day}`);
-      if(activeBtn) {
-        activeBtn.className = 'day-btn py-2.5 theme-accent-bg text-slate-900 rounded-lg font-bold';
-      }
+      loadData();
+    }
 
-      loadDayData();
+    function toggleItem(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.toggle('active');
+        saveData();
+      }
+    }
+
+    function toggleGlass(index) {
+      glassesState[index] = !glassesState[index];
+      renderGlasses();
+      saveData();
     }
 
     function renderGlasses() {
       const container = document.getElementById('glasses-container');
       container.innerHTML = '';
-
       let count = 0;
-      waterGlasses.forEach((isFilled, idx) => {
-        if(isFilled) count++;
+
+      glassesState.forEach((isFull, i) => {
+        if (isFull) count++;
         const div = document.createElement('div');
-        div.className = 'flex flex-col items-center glass-svg';
-        div.onclick = () => toggleGlass(idx);
+        div.className = isFull ? 'glass-item active' : 'glass-item';
+        div.innerText = '🥤';
+        div.onclick = function() { toggleGlass(i); };
+        container.appendChild(div);
+      });
 
-        const fillColor = isFilled ? '#06b6d4' : '#334155';
-        const strokeColor = isFilled ? '#22d3ee' : '#64748b';
+      document.getElementById('water-count-text').innerText = count + ' / 8 vasos';
+    }
 
-        div.innerHTML = `
-          <svg width="36" height="48" viewBox="0 0 40 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    function updateEnergy(val) {
+      document.getElementById('energy-val').innerText = val + '%';
+      saveData();
+    }
+
+    function selectMood(mood) {
+      selectedMood = mood;
+      ['😁', '🙂', '😐', '😓', '😴'].forEach(m => {
+        const el = document.getElementById('mood-' + m);
+        if (el) {
+          if (m === mood) el.classList.add('active');
+          else el.classList.remove('active');
+        }
+      });
+      saveData();
+    }
+
+    function updateProfileName(val) {
+      document.getElementById('user-display-name').innerText = 'Perfil: ' + (val || 'Tamara Nunia');
+      saveData();
+    }
+
+    function saveData() {
+      const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
+      const toggleStates = {};
+      
+      toggles.forEach(id => {
+        const el = document.getElementById(id);
+        toggleStates[id] = el ? el.classList.contains('active') : false;
+      });
+
+      const data = {
+        energy: document.getElementById('energy-range').value,
+        sleep: document.getElementById('sleep-input').value,
+        warmup: document.getElementById('warmup-input').value,
+        exName: document.getElementById('ex-name-input').value,
+        exReps: document.getElementById('ex-reps-input').value,
+        exSeries: document.getElementById('ex-series-input').value,
+        userName: document.getElementById('user-name-input').value,
+        height: document.getElementById('height-input').value,
+        weight: document.getElementById('weight-input').value,
+        mood: selectedMood,
+        glasses: glassesState,
+        toggles: toggleStates
+      };
+
+      localStorage.setItem('fit_data_' + activeDay, JSON.stringify(data));
+      calculateProgress();
+    }
+
+    function loadData() {
+      const raw = localStorage.getItem('fit_data_' + activeDay);
+      const data = raw ? JSON.parse(raw) : null;
+
+      const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
+
+      if (data) {
+        document.getElementById('energy-range').value = data.energy || 50;
+        document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
+        document.getElementById('sleep-input').value = data.sleep || '';
