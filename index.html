@@ -29,19 +29,18 @@
       padding: 1.25rem;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     }
-    .circle-checkbox {
-      width: 32px;
-      height: 32px;
+    .custom-check {
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      border: 2px solid #475569;
+      border: 2px solid #64748b;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       transition: all 0.2s ease;
-      user-select: none;
+      pointer-events: none;
     }
-    .circle-checkbox.checked {
+    .custom-check.checked {
       background-color: var(--theme-color);
       border-color: var(--theme-color);
       color: #ffffff;
@@ -49,6 +48,7 @@
     .theme-accent-text { color: var(--theme-color) !important; }
     .theme-accent-bg { background-color: var(--theme-color) !important; }
     .theme-accent-border { border-color: var(--theme-border) !important; }
+    
     .glass-svg {
       cursor: pointer;
       transition: transform 0.2s ease;
@@ -77,25 +77,25 @@
 
   <main class="max-w-xl mx-auto p-4 space-y-6">
 
-    <!-- CAMBIAR COLOR DE TEMA -->
+    <!-- PERSONALIZAR COLOR -->
     <section class="card space-y-3 border theme-accent-border">
       <h3 class="font-bold text-slate-200 text-xs flex items-center gap-2">
-        <i class="fa-solid fa-palette theme-accent-text"></i> Personalizar Color Visual:
+        <i class="fa-solid fa-palette theme-accent-text"></i> Color Visual:
       </h3>
-      <div class="flex gap-4 justify-start items-center">
-        <button onclick="setAppTheme('#22c55e')" class="w-8 h-8 rounded-full bg-green-500 border-2 border-white hover:scale-110 transition" title="Verde"></button>
-        <button onclick="setAppTheme('#3b82f6')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white hover:scale-110 transition" title="Azul"></button>
-        <button onclick="setAppTheme('#a855f7')" class="w-8 h-8 rounded-full bg-purple-500 border-2 border-white hover:scale-110 transition" title="Violeta"></button>
-        <button onclick="setAppTheme('#ec4899')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white hover:scale-110 transition" title="Rosa"></button>
-        <button onclick="setAppTheme('#f97316')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white hover:scale-110 transition" title="Naranja"></button>
-        <button onclick="setAppTheme('#06b6d4')" class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-white hover:scale-110 transition" title="Cian"></button>
+      <div class="flex gap-3 justify-start items-center">
+        <button onclick="setAppTheme('#22c55e')" class="w-8 h-8 rounded-full bg-green-500 border-2 border-white hover:scale-110 transition"></button>
+        <button onclick="setAppTheme('#3b82f6')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white hover:scale-110 transition"></button>
+        <button onclick="setAppTheme('#a855f7')" class="w-8 h-8 rounded-full bg-purple-500 border-2 border-white hover:scale-110 transition"></button>
+        <button onclick="setAppTheme('#ec4899')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white hover:scale-110 transition"></button>
+        <button onclick="setAppTheme('#f97316')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white hover:scale-110 transition"></button>
+        <button onclick="setAppTheme('#06b6d4')" class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-white hover:scale-110 transition"></button>
       </div>
     </section>
 
-    <!-- SELECTOR DE DÍA DE LA SEMANA -->
+    <!-- SELECTOR DE DÍA -->
     <section class="card space-y-2">
       <div class="flex justify-between items-center">
-        <span class="text-xs font-semibold text-slate-400">Selecciona el día a registrar:</span>
+        <span class="text-xs font-semibold text-slate-400">Día de registro:</span>
         <span class="text-xs theme-accent-text font-bold" id="current-day-label">Lunes</span>
       </div>
       <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold" id="day-buttons">
@@ -109,16 +109,16 @@
       </div>
     </section>
 
-    <!-- PROGRESO GENERAL Y BOTÓN DE MOTIVACIÓN -->
-    <section class="card bg-gradient-to-r from-slate-800 to-slate-900 border theme-accent-border space-y-3">
+    <!-- PROGRESO GENERAL Y ACCIÓN DE COMPARTIR -->
+    <section class="card bg-slate-800/50 border theme-accent-border space-y-3">
       <div class="flex justify-between items-center">
-        <h2 class="text-lg font-bold text-slate-200" id="today-header">Hoy: Lunes</h2>
-        <span class="text-xs px-2.5 py-1 bg-slate-800 theme-accent-text rounded-full font-bold" id="overall-percentage-text">0% Completado 💚</span>
+        <h2 class="text-base font-bold text-slate-200" id="today-header">Hoy: Lunes</h2>
+        <span class="text-xs px-2.5 py-1 bg-slate-800 theme-accent-text rounded-full font-bold border border-slate-700" id="overall-percentage-text">0% Completado 💚</span>
       </div>
-      <div class="w-full bg-slate-700 h-4 rounded-full overflow-hidden">
+      <div class="w-full bg-slate-700 h-3.5 rounded-full overflow-hidden">
         <div id="overall-progress-bar" class="theme-accent-bg h-full transition-all duration-300" style="width: 0%;"></div>
       </div>
-      <button onclick="shareProgress()" class="w-full mt-2 py-2 theme-accent-bg text-slate-900 font-bold rounded-lg text-xs flex items-center justify-center gap-2 hover:opacity-90 transition">
+      <button onclick="shareProgress()" class="w-full mt-1 py-2 theme-accent-bg text-slate-900 font-bold rounded-lg text-xs flex items-center justify-center gap-2 hover:opacity-90 transition">
         <i class="fa-solid fa-paper-plane"></i> Enviar Mi Avance a Mis Amigos
       </button>
     </section>
@@ -126,7 +126,7 @@
     <!-- ENERGÍA Y DESCANSO -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-bolt text-yellow-400"></i> Nivel de Energía y Descanso
+        <i class="fa-solid fa-bolt text-yellow-400"></i> Nivel de Energía y Sueño
       </h3>
       <div>
         <label class="text-xs text-slate-400 flex justify-between">
@@ -137,7 +137,7 @@
       </div>
       <div>
         <label class="text-xs text-slate-400 block mb-1">Horas de descanso/sueño:</label>
-        <input type="number" id="sleep-hours" placeholder="Ej: 8" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-slate-500" oninput="saveCurrentData()">
+        <input type="number" id="sleep-hours" placeholder="Ej: 8" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200 focus:outline-none" oninput="saveCurrentData()">
       </div>
     </section>
 
@@ -147,13 +147,11 @@
         <i class="fa-solid fa-dumbbell theme-accent-text"></i> Rutina del Día
       </h3>
 
-      <!-- ENTRADA EN CALOR -->
       <div class="p-3 bg-slate-800/80 rounded-xl space-y-1 border border-orange-500/20">
         <span class="text-xs font-bold text-orange-400">🔥 Entrada en Calor:</span>
         <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular + 10 min cinta" class="w-full bg-transparent text-xs text-slate-300 border-b border-slate-700 focus:outline-none py-1" oninput="saveCurrentData()">
       </div>
 
-      <!-- CAMPOS DIRECTOS DE EJERCICIO -->
       <div class="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-3">
         <span class="text-xs font-bold theme-accent-text block"><i class="fa-solid fa-pen-to-square"></i> Registro de Ejercicio Principal</span>
         <div>
@@ -172,58 +170,57 @@
         </div>
       </div>
 
-      <!-- DÍA DE DESCANSO O CARDIO -->
       <div>
-        <label class="text-xs text-slate-400 block mb-1">Si fue día de descanso o cardio alternativo, escríbelo aquí:</label>
-        <input type="text" id="rest-cardio-note" placeholder="Ej: Caminata 5km / Reposo total / Yoga" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-xs text-slate-200 focus:outline-none" oninput="saveCurrentData()">
+        <label class="text-xs text-slate-400 block mb-1">Día de descanso o nota de ejercicio:</label>
+        <input type="text" id="rest-cardio-note" placeholder="Ej: Caminata / Reposo total / Yoga" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-xs text-slate-200 focus:outline-none" oninput="saveCurrentData()">
       </div>
     </section>
 
-    <!-- ALIMENTACIÓN Y MEDICAMENTOS -->
+    <!-- ALIMENTACIÓN Y MEDICAMENTOS (100% INTERACTIVO) -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
         <i class="fa-solid fa-utensils text-blue-400"></i> Comidas y Medicamentos
       </h3>
 
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-1')">
-          <span>Desayuno</span>
-          <div id="meal-1" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+        <div onclick="toggleCheck('meal-1')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
+          <span class="font-medium text-slate-200">Desayuno</span>
+          <div id="meal-1" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-2')">
-          <span>Almuerzo</span>
-          <div id="meal-2" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+        <div onclick="toggleCheck('meal-2')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
+          <span class="font-medium text-slate-200">Almuerzo</span>
+          <div id="meal-2" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-3')">
-          <span>Merienda</span>
-          <div id="meal-3" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+        <div onclick="toggleCheck('meal-3')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
+          <span class="font-medium text-slate-200">Merienda</span>
+          <div id="meal-3" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-4')">
-          <span>Cena</span>
-          <div id="meal-4" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+        <div onclick="toggleCheck('meal-4')" class="p-3 bg-slate-800 hover:bg-slate-700/80 rounded-xl flex justify-between items-center cursor-pointer border border-slate-700">
+          <span class="font-medium text-slate-200">Cena</span>
+          <div id="meal-4" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
       </div>
 
       <div class="space-y-2 pt-2 border-t border-slate-800">
         <span class="text-xs font-semibold text-slate-400">💊 Medicamentos / Suplementos:</span>
         <div class="grid grid-cols-3 gap-2 text-xs">
-          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1 cursor-pointer" onclick="toggleCircleById('med-1')">
-            <span>Mañana</span>
-            <div id="med-1" class="circle-checkbox mx-auto med-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div onclick="toggleCheck('med-1')" class="p-2.5 bg-slate-800 hover:bg-slate-700/80 rounded-xl text-center space-y-1.5 cursor-pointer border border-slate-700 flex flex-col items-center">
+            <span class="text-slate-200">Mañana</span>
+            <div id="med-1" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
           </div>
-          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1 cursor-pointer" onclick="toggleCircleById('med-2')">
-            <span>Tarde</span>
-            <div id="med-2" class="circle-checkbox mx-auto med-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div onclick="toggleCheck('med-2')" class="p-2.5 bg-slate-800 hover:bg-slate-700/80 rounded-xl text-center space-y-1.5 cursor-pointer border border-slate-700 flex flex-col items-center">
+            <span class="text-slate-200">Tarde</span>
+            <div id="med-2" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
           </div>
-          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1 cursor-pointer" onclick="toggleCircleById('med-3')">
-            <span>Noche</span>
-            <div id="med-3" class="circle-checkbox mx-auto med-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div onclick="toggleCheck('med-3')" class="p-2.5 bg-slate-800 hover:bg-slate-700/80 rounded-xl text-center space-y-1.5 cursor-pointer border border-slate-700 flex flex-col items-center">
+            <span class="text-slate-200">Noche</span>
+            <div id="med-3" class="custom-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- HIDRATACIÓN DIBUJADA EN VASOS -->
+    <!-- HIDRATACIÓN EN VASOS -->
     <section class="card space-y-3">
       <div class="flex justify-between items-center">
         <h3 class="font-bold text-slate-200 flex items-center gap-2">
@@ -231,7 +228,7 @@
         </h3>
         <span class="text-xs text-cyan-400 font-bold" id="water-count">0 / 8 vasos</span>
       </div>
-      <p class="text-[11px] text-slate-400">Toca los vasos para marcarlos o desmarcarlos:</p>
+      <p class="text-[11px] text-slate-400">Toca cada vaso para llenarlo/vaciarlo:</p>
       
       <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 pt-2" id="glasses-container">
         <!-- Renderizado JS -->
@@ -241,7 +238,7 @@
     <!-- CONFIGURACIÓN DE PERFIL Y MEDIDAS -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-id-card text-purple-400"></i> Mi Perfil y Medidas Corporales
+        <i class="fa-solid fa-id-card text-purple-400"></i> Perfil y Medidas Corporales
       </h3>
       <div class="grid grid-cols-2 gap-3 text-xs">
         <div class="col-span-2">
@@ -267,36 +264,36 @@
       </div>
     </section>
 
-    <!-- ESTADO DE ÁNIMO Y CIERRE -->
+    <!-- ESTADO DE ÁNIMO Y NOTAS -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
         <i class="fa-solid fa-heart text-pink-400"></i> Estado de Ánimo y Cierre
       </h3>
       <div>
-        <label class="text-xs text-slate-400 block mb-2">Selecciona tu estado de ánimo de hoy:</label>
+        <label class="text-xs text-slate-400 block mb-2">Selecciona tu estado de ánimo:</label>
         <div class="flex justify-between text-2xl" id="mood-selector">
-          <button onclick="selectMood('😁', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😁</button>
-          <button onclick="selectMood('🙂', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">🙂</button>
-          <button onclick="selectMood('😐', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😐</button>
-          <button onclick="selectMood('😓', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😓</button>
-          <button onclick="selectMood('😴', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😴</button>
+          <button onclick="selectMood('😁', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😁</button>
+          <button onclick="selectMood('🙂', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">🙂</button>
+          <button onclick="selectMood('😐', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😐</button>
+          <button onclick="selectMood('😓', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😓</button>
+          <button onclick="selectMood('😴', this)" class="mood-btn p-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 transition">😴</button>
         </div>
       </div>
 
       <div class="space-y-2">
-        <label class="text-xs text-slate-400">✨ 3 Cosas por las que agradeces hoy:</label>
+        <label class="text-xs text-slate-400">✨ 3 Agradecimientos de hoy:</label>
         <input type="text" id="thanks-1" placeholder="1. Mi salud" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
         <input type="text" id="thanks-2" placeholder="2. Mi entrenamiento" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
         <input type="text" id="thanks-3" placeholder="3. Mi descanso" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
       </div>
 
       <div>
-        <label class="text-xs text-slate-400">Notas u observaciones adicionales:</label>
-        <textarea id="daily-notes" placeholder="Escribe aquí pensamientos de tu jornada..." class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs mt-1 h-16" oninput="saveCurrentData()"></textarea>
+        <label class="text-xs text-slate-400">Notas adicionales:</label>
+        <textarea id="daily-notes" placeholder="Pensamientos del día..." class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs mt-1 h-16" oninput="saveCurrentData()"></textarea>
       </div>
     </section>
 
-    <!-- RESUMEN GRÁFICO SEMANAL -->
+    <!-- GRÁFICO SEMANAL -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
         <i class="fa-solid fa-chart-line theme-accent-text"></i> Avance Semanal
@@ -306,20 +303,20 @@
       </div>
     </section>
 
-    <!-- FOOTER DE AUTORÍA Y COPYRIGHT -->
+    <!-- FOOTER DE COPYRIGHT -->
     <section class="card bg-slate-900 border border-slate-800 text-center space-y-2">
       <p class="text-xs text-slate-300 font-semibold flex items-center justify-center gap-2">
         <i class="fa-solid fa-shield-halved theme-accent-text"></i>
         <span>Aplicación Creada por Tamara Nunia</span>
       </p>
-      <p class="text-[10px] text-slate-500 leading-relaxed">
+      <p class="text-[10px] text-slate-500">
         © 2026 Tamara Nunia. Todos los derechos reservados.
       </p>
     </section>
 
   </main>
 
-  <!-- LÓGICA JAVASCRIPT COMPLETA E INTERACTIVA -->
+  <!-- LÓGICA DE JAVASCRIPT SIN ERRORES -->
   <script>
     let currentDay = 'Lunes';
     let selectedMood = '';
@@ -367,6 +364,4 @@
         const strokeColor = isFilled ? '#22d3ee' : '#64748b';
 
         div.innerHTML = `
-          <svg width="40" height="52" viewBox="0 0 40 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 8 L10 46 C10 48 12 50 15 50 L25 50 C28 50 30 48 30 46 L34 8 Z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>
-            <ellipse cx="20" cy="8" rx="14" ry="3" stroke="${strokeColor}" stroke-width="2" fill="${isFilled ? '#06b6d4' : '#
+          <svg width="36" height="48" viewBox="0 0 40 52" fill="none" xmlns="http://www.w3.org/2000/svg">
