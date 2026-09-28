@@ -1,0 +1,15 @@
+{
+  "short_name": "PochocloFit",
+  "name": "PochocloFit - Tamara Nunia",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3050/3050158.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0b0f17",
+  "theme_color": "#10b981",
+  "display": "standalone"
+}
