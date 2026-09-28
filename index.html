@@ -3,262 +3,578 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PochocloFit - Mi Rutina Interactiva</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Pochoclo-Fit | Tamara Nunia</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
       --primary: #10b981;
-      --primary-hover: #059669;
-      --text: #f8fafc;
-      --subtext: #94a3b8;
-      --border: #334155;
+      --primary-soft: rgba(16, 185, 129, 0.15);
+      --bg: #0b0f19;
+      --card-bg: #151c2c;
+      --card-border: #232d42;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-blue: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      touch-action: manipulation;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
     }
 
-    .container {
-      width: 100%;
-      max-width: 480px;
-      padding: 20px;
-      box-sizing: border-box;
+    header {
+      max-width: 1200px;
+      margin: 0 auto 20px auto;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--card-bg);
+      padding: 15px 25px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .badge {
+      background-color: var(--primary-soft);
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid var(--primary);
+    }
+
+    .dashboard-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 20px;
     }
 
-    .header {
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 50px;
-    }
-
-    .title {
-      font-size: 26px;
-      margin: 5px 0 0 0;
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .card {
       background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-
-    .user-section {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 15px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    /* PROFILE CARD */
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    /* DAYS SELECTOR */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .day-btn {
+      background-color: var(--bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 10px 0;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .day-btn.active {
+      background-color: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* WATER TRACKER */
+    .water-counter {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #38bdf8;
+      margin: 10px 0;
+    }
+
+    .glasses-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .glass-btn {
+      background-color: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+
+    .glass-btn:active {
+      transform: scale(0.92);
+    }
+
+    .glass-btn.active {
+      background-color: rgba(56, 189, 248, 0.2);
+      border-color: #38bdf8;
+    }
+
+    /* TOGGLE LISTS */
+    .toggle-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toggle-item {
+      background-color: var(--bg);
+      border: 1px solid var(--card-border);
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-item.active {
+      border-color: var(--primary);
+      background-color: var(--primary-soft);
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    .toggle-item.active .checkbox {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #000;
+    }
+
+    /* INPUTS & RANGES */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     label {
-      font-size: 14px;
-      color: var(--subtext);
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="number"] {
       width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background-color: #0f172a;
+      background-color: var(--bg);
+      border: 1px solid var(--card-border);
       color: var(--text);
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    .add-box {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      padding: 12px 16px;
+      padding: 10px;
       border-radius: 8px;
-      border: none;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .btn-action {
+      width: 100%;
       background-color: var(--primary);
       color: #000;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    button:hover {
-      background-color: var(--primary-hover);
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 15px 0 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #0f172a;
-      padding: 12px 15px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-
-    .task-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-    }
-
-    input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    .completed {
-      text-decoration: line-through;
-      color: var(--subtext);
-    }
-
-    .btn-delete {
-      background-color: transparent;
-      color: #ef4444;
-      font-size: 18px;
-      padding: 4px 8px;
       border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 700;
       cursor: pointer;
+      transition: opacity 0.2s;
     }
 
-    .footer {
+    .btn-action:hover {
+      opacity: 0.9;
+    }
+
+    /* MOOD SELECTOR */
+    .mood-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .mood-btn {
+      font-size: 1.8rem;
+      background-color: var(--bg);
+      border: 1px solid var(--card-border);
+      padding: 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      flex: 1;
+      margin: 0 4px;
       text-align: center;
-      font-size: 12px;
-      color: var(--subtext);
-      margin-top: auto;
-      padding-top: 10px;
+    }
+
+    .mood-btn.active {
+      border-color: #f43f5e;
+      background-color: rgba(244, 63, 94, 0.2);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 20px;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <div class="logo">🍿🏋️‍♀️</div>
-      <h1 class="title">PochocloFit</h1>
+  <header>
+    <div class="brand">
+      <div class="brand-title">🍿 Pochoclo-Fit</div>
+      <span class="badge">Reto Interactivo</span>
     </div>
+    <button class="btn-action" id="share-btn" style="width: auto; padding: 8px 16px;">Compartir Avance</button>
+  </header>
 
-    <!-- Personalización -->
-    <div class="card user-section">
-      <label for="userName">Tu nombre / Perfil:</label>
-      <input type="text" id="userName" placeholder="Ingresá tu nombre..." oninput="saveUserData()">
-    </div>
+  <div class="dashboard-grid">
 
-    <!-- Lista interactiva de ejercicios -->
-    <div class="card">
-      <label>Mis Ejercicios y Tareas:</label>
-      <div class="add-box">
-        <input type="text" id="newTask" placeholder="Ej: 10 Sentadillas, Beber agua...">
-        <button onclick="addTask()">Agregar</button>
+    <!-- COLUMNA 1 -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <div class="card">
+        <div class="profile-info">
+          <div class="avatar">TN</div>
+          <div>
+            <h3 style="font-size: 1rem;" id="profile-name-display">Tamara Nunia</h3>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Usuario Activo</span>
+          </div>
+        </div>
       </div>
 
-      <ul id="taskList"></ul>
+      <div class="card">
+        <div class="card-header">📅 Día del Reto</div>
+        <div class="days-grid">
+          <button class="day-btn active" data-day="Lunes">Lun</button>
+          <button class="day-btn" data-day="Martes">Mar</button>
+          <button class="day-btn" data-day="Miércoles">Mié</button>
+          <button class="day-btn" data-day="Jueves">Jue</button>
+          <button class="day-btn" data-day="Viernes">Vie</button>
+          <button class="day-btn" data-day="Sábado">Sáb</button>
+          <button class="day-btn" data-day="Domingo">Dom</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span>💧 Hidratación</span>
+          <span id="water-count-text" style="color: #38bdf8;">0/8 vasos</span>
+        </div>
+        <div class="water-counter" id="water-big-count">0.0 L</div>
+        <div class="glasses-grid" id="glasses-container"></div>
+      </div>
+
     </div>
 
-    <div class="footer" id="footerText">
-      Copyright © 2026 Tamara Nunia. Todos los derechos reservados.
+    <!-- COLUMNA 2 -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+      <div class="card">
+        <div class="card-header">🥗 Hábitos Saludables</div>
+        <div class="toggle-list">
+          <div class="toggle-item" id="meal-desayuno">
+            <span>Desayuno Equilibrado</span>
+            <div class="checkbox">✓</div>
+          </div>
+          <div class="toggle-item" id="meal-almuerzo">
+            <span>Almuerzo Saludable</span>
+            <div class="checkbox">✓</div>
+          </div>
+          <div class="toggle-item" id="meal-merienda">
+            <span>Merienda Nutritiva</span>
+            <div class="checkbox">✓</div>
+          </div>
+          <div class="toggle-item" id="meal-cena">
+            <span>Cena Ligera</span>
+            <div class="checkbox">✓</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">⚡ Energía y Descanso</div>
+        <div class="input-group">
+          <div style="display: flex; justify-content: space-between;">
+            <label>Nivel de Energía:</label>
+            <span id="energy-val" style="color: var(--primary); font-weight: bold;">50%</span>
+          </div>
+          <input type="range" id="energy-range" min="0" max="100" value="50">
+        </div>
+        <div class="input-group" style="margin-top: 10px;">
+          <label>Horas de Sueño:</label>
+          <input type="number" id="sleep-input" placeholder="Ej: 8 horas">
+        </div>
+      </div>
+
     </div>
+
+    <!-- COLUMNA 3 -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+      <div class="card">
+        <div class="card-header">🏋️‍♀️ Entrenamiento Hoy</div>
+        <div class="input-group">
+          <label>Ejercicio Principal:</label>
+          <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas / Cardio">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
+          <div class="input-group">
+            <label>Series:</label>
+            <input type="text" id="ex-series-input" placeholder="Ej: 4">
+          </div>
+          <div class="input-group">
+            <label>Reps / Min:</label>
+            <input type="text" id="ex-reps-input" placeholder="Ej: 12">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">✨ Estado de Ánimo</div>
+        <div class="mood-row">
+          <div class="mood-btn" data-mood="😁">😁</div>
+          <div class="mood-btn" data-mood="🙂">🙂</div>
+          <div class="mood-btn" data-mood="😐">😐</div>
+          <div class="mood-btn" data-mood="😓">😓</div>
+          <div class="mood-btn" data-mood="😴">😴</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="btn-action" id="send-btn">Guardar Avance de Hoy</button>
+      </div>
+
+    </div>
+
   </div>
 
+  <footer>
+    <p>© Copyright Tamara Nunia - Pochoclo Fit. Todos los derechos reservados.</p>
+  </footer>
+
   <script>
-    let tasks = JSON.parse(localStorage.getItem('pochoclo_tasks')) || [
-      { text: "Sentadillas con peso (3x10)", done: false },
-      { text: "Press de banca (3x8)", done: true },
-      { text: "Tomar 2L de agua", done: false }
-    ];
+    document.addEventListener('DOMContentLoaded', () => {
+      let activeDay = 'Lunes';
+      let glassesState = Array(8).fill(false);
+      let selectedMood = '';
 
-    document.getElementById('userName').value = localStorage.getItem('pochoclo_user') || 'Tamara Nunia';
+      function changeDay(day) {
+        activeDay = day;
+        document.querySelectorAll('.day-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-day') === day);
+        });
+        loadData();
+      }
 
-    function saveUserData() {
-      const name = document.getElementById('userName').value;
-      localStorage.setItem('pochoclo_user', name);
-    }
+      function renderGlasses() {
+        const container = document.getElementById('glasses-container');
+        container.innerHTML = '';
+        let count = 0;
 
-    function renderTasks() {
-      const list = document.getElementById('taskList');
-      list.innerHTML = '';
-      tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'task-info';
-        infoDiv.onclick = () => toggleTask(index);
+        glassesState.forEach((isFull, i) => {
+          if (isFull) count++;
+          const btn = document.createElement('div');
+          btn.className = isFull ? 'glass-btn active' : 'glass-btn';
+          btn.innerText = '🥤';
+          btn.addEventListener('click', () => {
+            glassesState[i] = !glassesState[i];
+            renderGlasses();
+            saveData();
+          });
+          container.appendChild(btn);
+        });
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.done;
+        document.getElementById('water-count-text').innerText = `${count}/8 vasos`;
+        document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(1)} L`;
+      }
 
-        const span = document.createElement('span');
-        span.textContent = task.text;
-        if (task.done) span.className = 'completed';
+      function saveData() {
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena'];
+        const toggleStates = {};
+        toggles.forEach(id => {
+          const el = document.getElementById(id);
+          toggleStates[id] = el ? el.classList.contains('active') : false;
+        });
 
-        infoDiv.appendChild(checkbox);
-        infoDiv.appendChild(span);
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn-delete';
-        deleteBtn.innerHTML = '🗑️';
-        deleteBtn.onclick = (e) => {
-          e.stopPropagation();
-          deleteTask(index);
+        const data = {
+          glasses: glassesState,
+          mood: selectedMood,
+          toggles: toggleStates,
+          energy: document.getElementById('energy-range').value,
+          sleep: document.getElementById('sleep-input').value,
+          exName: document.getElementById('ex-name-input').value,
+          exSeries: document.getElementById('ex-series-input').value,
+          exReps: document.getElementById('ex-reps-input').value,
         };
 
-        li.appendChild(infoDiv);
-        li.appendChild(deleteBtn);
-        list.appendChild(li);
+        localStorage.setItem('pochoclo_data_' + activeDay, JSON.stringify(data));
+      }
+
+      function loadData() {
+        const raw = localStorage.getItem('pochoclo_data_' + activeDay);
+        const data = raw ? JSON.parse(raw) : null;
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena'];
+
+        if (data) {
+          glassesState = data.glasses || Array(8).fill(false);
+          selectedMood = data.mood || '';
+          document.getElementById('energy-range').value = data.energy || 50;
+          document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
+          document.getElementById('sleep-input').value = data.sleep || '';
+          document.getElementById('ex-name-input').value = data.exName || '';
+          document.getElementById('ex-series-input').value = data.exSeries || '';
+          document.getElementById('ex-reps-input').value = data.exReps || '';
+
+          if (data.toggles) {
+            toggles.forEach(id => {
+              const el = document.getElementById(id);
+              if (el) el.classList.toggle('active', !!data.toggles[id]);
+            });
+          }
+        } else {
+          glassesState = Array(8).fill(false);
+          selectedMood = '';
+          document.getElementById('energy-range').value = 50;
+          document.getElementById('energy-val').innerText = '50%';
+          document.getElementById('sleep-input').value = '';
+          document.getElementById('ex-name-input').value = '';
+          document.getElementById('ex-series-input').value = '';
+          document.getElementById('ex-reps-input').value = '';
+          toggles.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active');
+          });
+        }
+
+        renderGlasses();
+        updateMoodUI();
+      }
+
+      function updateMoodUI() {
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-mood') === selectedMood);
+        });
+      }
+
+      // ASIGNACIÓN DE EVENTOS
+      document.querySelectorAll('.day-btn').forEach(btn => {
+        btn.addEventListener('click', () => changeDay(btn.getAttribute('data-day')));
       });
 
-      localStorage.setItem('pochoclo_tasks', JSON.stringify(tasks));
-    }
+      document.querySelectorAll('.toggle-item').forEach(item => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('active');
+          saveData();
+        });
+      });
 
-    function addTask() {
-      const input = document.getElementById('newTask');
-      const text = input.value.trim();
-      if (text !== '') {
-        tasks.push({ text: text, done: false });
-        input.value = '';
-        renderTasks();
-      }
-    }
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedMood = btn.getAttribute('data-mood');
+          updateMoodUI();
+          saveData();
+        });
+      });
 
-    function toggleTask(index) {
-      tasks[index].done = !tasks[index].done;
-      renderTasks();
-    }
+      document.getElementById('energy-range').addEventListener('input', (e) => {
+        document.getElementById('energy-val').innerText = e.target.value + '%';
+        saveData();
+      });
 
-    function deleteTask(index) {
-      tasks.splice(index, 1);
-      renderTasks();
-    }
+      ['sleep-input', 'ex-name-input', 'ex-series-input', 'ex-reps-input'].forEach(id => {
+        document.getElementById(id).addEventListener('input', saveData);
+      });
 
-    renderTasks();
+      document.getElementById('send-btn').addEventListener('click', () => {
+        alert('¡Avance guardado con éxito!');
+      });
+
+      changeDay('Lunes');
+    });
   </script>
 </body>
 </html>
