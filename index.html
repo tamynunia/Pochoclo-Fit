@@ -16,6 +16,7 @@
       --text-muted: #9ca3af;
       --accent-blue: #38bdf8;
       --accent-pink: #f43f5e;
+      --accent-yellow: #f59e0b;
     }
 
     * {
@@ -44,6 +45,8 @@
       padding: 15px 25px;
       border-radius: 16px;
       border: 1px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
     .brand {
@@ -67,6 +70,27 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .user-select-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .user-select-container select {
+      background: transparent;
+      color: var(--text);
+      border: none;
+      outline: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
 
     .theme-selector {
@@ -141,7 +165,14 @@
     .profile-info {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 15px;
+    }
+
+    .profile-details {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .avatar {
@@ -263,12 +294,18 @@
       gap: 6px;
     }
 
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
     label {
       font-size: 0.8rem;
       color: var(--text-muted);
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"], input[type="number"], select {
       width: 100%;
       background-color: var(--bg);
       border: 1px solid var(--card-border);
@@ -314,7 +351,6 @@
       background-color: var(--primary-soft);
     }
 
-    /* LISTAS DINÁMICAS (EJERCICIOS Y AGRADECIMIENTOS) */
     .dynamic-list {
       display: flex;
       flex-direction: column;
@@ -372,6 +408,35 @@
       background-color: rgba(244, 63, 94, 0.2);
     }
 
+    .quote-box {
+      background: var(--bg);
+      border-left: 4px solid var(--accent-yellow);
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-style: italic;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    .quote-author {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: normal;
+      font-weight: bold;
+    }
+
+    .friend-card {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
     .chart-container {
       max-width: 1200px;
       margin: 20px auto 0 auto;
@@ -396,6 +461,13 @@
     </div>
     
     <div class="header-actions">
+      <!-- SELECTOR DE PERFILES -->
+      <div class="user-select-container">
+        <label for="user-selector" style="font-size:0.75rem;">Perfil:</label>
+        <select id="user-selector"></select>
+        <button id="add-user-btn" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:bold;">+</button>
+      </div>
+
       <!-- SELECTOR DE TEMAS DE COLOR -->
       <div class="theme-selector">
         <span class="theme-label">Tema:</span>
@@ -413,10 +485,12 @@
       
       <div class="card">
         <div class="profile-info">
-          <div class="avatar">TN</div>
-          <div>
-            <h3 style="font-size: 1rem;">Tamara Nunia</h3>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Usuario Activo</span>
+          <div class="profile-details">
+            <div class="avatar" id="user-avatar">TN</div>
+            <div>
+              <h3 style="font-size: 1rem;" id="user-display-name">Tamara Nunia</h3>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Usuario Activo</span>
+            </div>
           </div>
         </div>
       </div>
@@ -441,6 +515,45 @@
         </div>
         <div class="water-counter" id="water-big-count">0.0 L</div>
         <div class="glasses-grid" id="glasses-container"></div>
+      </div>
+
+      <!-- NUEVA SECCIÓN: MEDIDAS Y DATOS CORPORALES -->
+      <div class="card">
+        <div class="card-header">📏 Datos Corporales y Medidas</div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label>Peso (kg):</label>
+            <input type="number" id="body-weight" placeholder="Ej: 65.5" step="0.1">
+          </div>
+          <div class="input-group">
+            <label>Altura (cm):</label>
+            <input type="number" id="body-height" placeholder="Ej: 168">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label>Pecho (cm):</label>
+            <input type="number" id="body-chest" placeholder="Ej: 90">
+          </div>
+          <div class="input-group">
+            <label>Cintura (cm):</label>
+            <input type="number" id="body-waist" placeholder="Ej: 70">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label>Cadera (cm):</label>
+            <input type="number" id="body-hip" placeholder="Ej: 98">
+          </div>
+          <div class="input-group">
+            <label>Brazos (cm):</label>
+            <input type="number" id="body-arms" placeholder="Ej: 28">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Muslos (cm):</label>
+          <input type="number" id="body-thighs" placeholder="Ej: 55">
+        </div>
       </div>
 
     </div>
@@ -482,6 +595,16 @@
         </div>
       </div>
 
+      <!-- NUEVA SECCIÓN: FRASES MOTIVADORAS SOCIALES -->
+      <div class="card">
+        <div class="card-header">🔥 Muro Motivacional</div>
+        <div id="quotes-container" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+        <div class="input-group" style="margin-top: 5px;">
+          <input type="text" id="quote-input" placeholder="Escribe una frase inspiradora para el grupo...">
+          <button class="btn-secondary" id="add-quote-btn">Compartir Frase</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- COLUMNA 3 -->
@@ -493,7 +616,7 @@
           <label>Ejercicio:</label>
           <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas / Cardio">
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;">
+        <div class="grid-2" style="margin-top: 5px;">
           <div class="input-group">
             <label>Series:</label>
             <input type="text" id="ex-series-input" placeholder="Ej: 4">
@@ -526,6 +649,12 @@
         <div class="dynamic-list" id="thanks-list"></div>
       </div>
 
+      <!-- NUEVA SECCIÓN: PROGRESO DE AMIGOS -->
+      <div class="card">
+        <div class="card-header">👥 Progreso del Grupo</div>
+        <div id="friends-progress-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto;"></div>
+      </div>
+
       <div class="card">
         <button class="btn-action" id="send-btn">Guardar Avance de Hoy</button>
       </div>
@@ -548,6 +677,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      let activeUser = 'Tamara Nunia';
       let activeDay = 'Lunes';
       let glassesState = Array(8).fill(false);
       let selectedMood = '';
@@ -556,297 +686,31 @@
       let weeklyChart;
 
       const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+      let usersList = ['Tamara Nunia'];
 
-      function changeDay(day) {
-        activeDay = day;
-        document.querySelectorAll('.day-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('data-day') === day);
-        });
-        loadData();
-      }
-
-      function renderGlasses() {
-        const container = document.getElementById('glasses-container');
-        container.innerHTML = '';
-        let count = 0;
-
-        glassesState.forEach((isFull, i) => {
-          if (isFull) count++;
-          const btn = document.createElement('div');
-          btn.className = isFull ? 'glass-btn active' : 'glass-btn';
-          btn.innerText = '🥤';
-          btn.addEventListener('click', () => {
-            glassesState[i] = !glassesState[i];
-            renderGlasses();
-            saveData();
-            updateChart();
-          });
-          container.appendChild(btn);
-        });
-
-        document.getElementById('water-count-text').innerText = `${count}/8 vasos`;
-        document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(2)} L`;
-      }
-
-      function renderExercises() {
-        const container = document.getElementById('exercise-list');
-        container.innerHTML = '';
-
-        exercisesList.forEach((ex, index) => {
-          const item = document.createElement('div');
-          item.className = 'dynamic-item' + (ex.done ? ' done' : '');
-          
-          item.innerHTML = `
-            <span style="cursor: pointer;"><strong>${ex.name}</strong> (${ex.series} series x ${ex.reps})</span>
-            <div>
-              <button class="delete-item-btn" data-index="${index}">✕</button>
-            </div>
-          `;
-
-          item.querySelector('span').addEventListener('click', () => {
-            exercisesList[index].done = !exercisesList[index].done;
-            renderExercises();
-            saveData();
-          });
-
-          item.querySelector('.delete-item-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            exercisesList.splice(index, 1);
-            renderExercises();
-            saveData();
-          });
-
-          container.appendChild(item);
-        });
-      }
-
-      function renderThanks() {
-        const container = document.getElementById('thanks-list');
-        container.innerHTML = '';
-
-        thanksList.forEach((text, index) => {
-          const item = document.createElement('div');
-          item.className = 'dynamic-item';
-          
-          item.innerHTML = `
-            <span>✨ ${text}</span>
-            <button class="delete-item-btn" data-index="${index}">✕</button>
-          `;
-
-          item.querySelector('.delete-item-btn').addEventListener('click', () => {
-            thanksList.splice(index, 1);
-            renderThanks();
-            saveData();
-          });
-
-          container.appendChild(item);
-        });
-      }
-
-      function saveData() {
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
-        const toggleStates = {};
-        toggles.forEach(id => {
-          const el = document.getElementById(id);
-          toggleStates[id] = el ? el.classList.contains('active') : false;
-        });
-
-        const data = {
-          glasses: glassesState,
-          mood: selectedMood,
-          toggles: toggleStates,
-          energy: document.getElementById('energy-range').value,
-          sleep: document.getElementById('sleep-input').value,
-          exercises: exercisesList,
-          thanks: thanksList,
-        };
-
-        localStorage.setItem('pochoclo_data_' + activeDay, JSON.stringify(data));
-      }
-
-      function loadData() {
-        const raw = localStorage.getItem('pochoclo_data_' + activeDay);
-        const data = raw ? JSON.parse(raw) : null;
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
-
-        if (data) {
-          glassesState = data.glasses || Array(8).fill(false);
-          selectedMood = data.mood || '';
-          exercisesList = data.exercises || [];
-          thanksList = data.thanks || [];
-          document.getElementById('energy-range').value = data.energy || 50;
-          document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
-          document.getElementById('sleep-input').value = data.sleep || '';
-
-          if (data.toggles) {
-            toggles.forEach(id => {
-              const el = document.getElementById(id);
-              if (el) el.classList.toggle('active', !!data.toggles[id]);
-            });
-          }
+      // Inicialización de Usuarios
+      function loadUsers() {
+        const storedUsers = localStorage.getItem('pochoclo_users');
+        if (storedUsers) {
+          usersList = JSON.parse(storedUsers);
         } else {
-          // Limpia completamente los campos al entrar a un día nuevo sin registros
-          glassesState = Array(8).fill(false);
-          selectedMood = '';
-          exercisesList = [];
-          thanksList = [];
-          document.getElementById('energy-range').value = 50;
-          document.getElementById('energy-val').innerText = '50%';
-          document.getElementById('sleep-input').value = '';
-          toggles.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.classList.remove('active');
-          });
+          localStorage.setItem('pochoclo_users', JSON.stringify(usersList));
         }
-
-        document.getElementById('ex-name-input').value = '';
-        document.getElementById('ex-series-input').value = '';
-        document.getElementById('ex-reps-input').value = '';
-        document.getElementById('thanks-text-input').value = '';
-
-        renderGlasses();
-        renderExercises();
-        renderThanks();
-        updateMoodUI();
+        renderUserSelector();
       }
 
-      function updateMoodUI() {
-        document.querySelectorAll('.mood-btn').forEach(btn => {
-          btn.classList.toggle('active', btn.getAttribute('data-mood') === selectedMood);
+      function renderUserSelector() {
+        const selector = document.getElementById('user-selector');
+        selector.innerHTML = '';
+        usersList.forEach(user => {
+          const opt = document.createElement('option');
+          opt.value = user;
+          opt.innerText = user;
+          if (user === activeUser) opt.selected = true;
+          selector.appendChild(opt);
         });
       }
 
-      function initChart() {
-        const ctx = document.getElementById('weeklyChart').getContext('2d');
-        weeklyChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-            datasets: [{
-              label: 'Litros de Agua Consumidos',
-              data: getWeeklyWaterData(),
-              backgroundColor: '#38bdf8',
-              borderRadius: 6
-            }]
-          },
-          options: {
-            scales: {
-              y: { beginAtZero: true, max: 2.5 }
-            }
-          }
-        });
-      }
-
-      function getWeeklyWaterData() {
-        return daysList.map(day => {
-          const raw = localStorage.getItem('pochoclo_data_' + day);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            const count = (parsed.glasses || []).filter(Boolean).length;
-            return count * 0.25;
-          }
-          return 0;
-        });
-      }
-
-      function updateChart() {
-        if (weeklyChart) {
-          weeklyChart.data.datasets[0].data = getWeeklyWaterData();
-          weeklyChart.update();
-        }
-      }
-
-      // CAMBIO DE TEMA DE COLOR
-      document.querySelectorAll('.theme-dot').forEach(dot => {
-        dot.addEventListener('click', () => {
-          document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
-          dot.classList.add('active');
-          const primary = dot.getAttribute('data-primary');
-          const bg = dot.getAttribute('data-bg');
-          const card = dot.getAttribute('data-card');
-
-          document.documentElement.style.setProperty('--primary', primary);
-          document.documentElement.style.setProperty('--bg', bg);
-          document.documentElement.style.setProperty('--card-bg', card);
-        });
-      });
-
-      // BOTÓN AGREGAR EJERCICIO
-      document.getElementById('add-ex-btn').addEventListener('click', () => {
-        const nameInput = document.getElementById('ex-name-input');
-        const seriesInput = document.getElementById('ex-series-input');
-        const repsInput = document.getElementById('ex-reps-input');
-
-        const name = nameInput.value.trim();
-        const series = seriesInput.value.trim();
-        const reps = repsInput.value.trim();
-
-        if (name !== '') {
-          exercisesList.push({
-            name: name,
-            series: series || '1',
-            reps: reps || '10',
-            done: false
-          });
-
-          nameInput.value = '';
-          seriesInput.value = '';
-          repsInput.value = '';
-
-          renderExercises();
-          saveData();
-        }
-      });
-
-      // BOTÓN AGREGAR AGRADECIMIENTO
-      document.getElementById('add-thanks-btn').addEventListener('click', () => {
-        const input = document.getElementById('thanks-text-input');
-        const text = input.value.trim();
-
-        if (text !== '') {
-          thanksList.push(text);
-          input.value = '';
-          renderThanks();
-          saveData();
-        }
-      });
-
-      // EVENTOS GENERALES
-      document.querySelectorAll('.day-btn').forEach(btn => {
-        btn.addEventListener('click', () => changeDay(btn.getAttribute('data-day')));
-      });
-
-      document.querySelectorAll('.toggle-item').forEach(item => {
-        item.addEventListener('click', () => {
-          item.classList.toggle('active');
-          saveData();
-        });
-      });
-
-      document.querySelectorAll('.mood-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          selectedMood = btn.getAttribute('data-mood');
-          updateMoodUI();
-          saveData();
-        });
-      });
-
-      document.getElementById('energy-range').addEventListener('input', (e) => {
-        document.getElementById('energy-val').innerText = e.target.value + '%';
-        saveData();
-      });
-
-      document.getElementById('sleep-input').addEventListener('input', saveData);
-
-      document.getElementById('send-btn').addEventListener('click', () => {
-        saveData();
-        updateChart();
-        alert('¡Avance guardado con éxito!');
-      });
-
-      changeDay('Lunes');
-      initChart();
-    });
-  </script>
-</body>
-</html>
+      function switchUser(newUser) {
+        activeUser = newUser;
+        docum
