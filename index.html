@@ -2,10 +2,6 @@
   ========================================================================
   COPYRIGHT & DERECHOS DE AUTOR
   © 2026 Tamara Nunia. Reservados todos los derechos.
-  
-  Propiedad intelectual, idea original, diseño y desarrollo por Tamara Nunia.
-  Queda prohibida la copia, reproducción, distribución o modificación 
-  no autorizada de esta aplicación o su código fuente sin autorización previa.
   ========================================================================
 -->
 <!DOCTYPE html>
@@ -20,8 +16,7 @@
   <style>
     :root {
       --theme-color: #22c55e;
-      --theme-border: #22c55e4d;
-      --theme-bg-light: #22c55e33;
+      --theme-border: #22c55e66;
     }
     body {
       background-color: #0f172a;
@@ -35,8 +30,8 @@
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     }
     .circle-checkbox {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 2px solid #475569;
       display: flex;
@@ -54,11 +49,18 @@
     .theme-accent-text { color: var(--theme-color) !important; }
     .theme-accent-bg { background-color: var(--theme-color) !important; }
     .theme-accent-border { border-color: var(--theme-border) !important; }
+    .glass-svg {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .glass-svg:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body class="pb-16">
 
-  <!-- ENCABEZADO Y SELECTOR DE PERFIL -->
+  <!-- ENCABEZADO -->
   <header class="p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
     <div class="max-w-xl mx-auto flex justify-between items-center">
       <div>
@@ -67,97 +69,58 @@
         </h1>
         <p class="text-xs text-slate-400" id="user-display-name">Perfil: Tamara Nunia</p>
       </div>
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-users text-slate-400 text-sm"></i>
-        <select id="profile-selector" onchange="switchProfile()" class="bg-slate-800 text-xs text-slate-200 p-2 rounded-lg border border-slate-700">
-          <!-- Cargado dinámicamente -->
-        </select>
-      </div>
+      <button onclick="shareProgress()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 theme-accent-text font-semibold flex items-center gap-1.5">
+        <i class="fa-solid fa-share-nodes"></i> Compartir
+      </button>
     </div>
   </header>
 
   <main class="max-w-xl mx-auto p-4 space-y-6">
 
-    <!-- SECCIÓN DE CONFIGURACIÓN DE TEMA Y PERFILES -->
-    <section class="card space-y-4 border theme-accent-border">
-      <div class="flex justify-between items-center">
-        <h3 class="font-bold text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-palette theme-accent-text"></i> Ajustes de la App y Perfil
-        </h3>
-        <button onclick="toggleSettingsPanel()" class="text-xs text-slate-400 hover:text-white underline">
-          Mostrar / Ocultar
-        </button>
-      </div>
-
-      <div id="settings-panel" class="space-y-4">
-        <!-- CAMBIAR COLOR DE TEMA -->
-        <div>
-          <label class="text-xs text-slate-400 block mb-2 font-semibold">Cambiar Color de Tema Visual:</label>
-          <div class="flex gap-3 justify-start items-center">
-            <button onclick="setAppTheme('#22c55e')" class="w-7 h-7 rounded-full bg-green-500 border-2 border-white hover:scale-110 transition" title="Verde Esmeralda"></button>
-            <button onclick="setAppTheme('#3b82f6')" class="w-7 h-7 rounded-full bg-blue-500 border-2 border-white hover:scale-110 transition" title="Azul Océano"></button>
-            <button onclick="setAppTheme('#a855f7')" class="w-7 h-7 rounded-full bg-purple-500 border-2 border-white hover:scale-110 transition" title="Violeta Neón"></button>
-            <button onclick="setAppTheme('#ec4899')" class="w-7 h-7 rounded-full bg-pink-500 border-2 border-white hover:scale-110 transition" title="Rosa Neón"></button>
-            <button onclick="setAppTheme('#f97316')" class="w-7 h-7 rounded-full bg-orange-500 border-2 border-white hover:scale-110 transition" title="Naranja Fuego"></button>
-            <button onclick="setAppTheme('#64748b')" class="w-7 h-7 rounded-full bg-slate-500 border-2 border-white hover:scale-110 transition" title="Gris Clásico"></button>
-          </div>
-        </div>
-
-        <!-- GESTIÓN DE PERFILES -->
-        <div class="pt-3 border-t border-slate-800 space-y-2">
-          <label class="text-xs text-slate-400 block font-semibold">Crear un Nuevo Perfil de Usuario:</label>
-          <div class="flex gap-2">
-            <input type="text" id="new-profile-name" placeholder="Nombre (Ej: Sofía, Lucas)" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-            <button onclick="createNewProfile()" class="px-3 py-2 theme-accent-bg text-slate-900 rounded-lg text-xs font-bold hover:opacity-90 transition">
-              + Crear Perfil
-            </button>
-          </div>
-        </div>
-
-        <!-- COMPARTIR E IMPORTAR PERFIL -->
-        <div class="pt-3 border-t border-slate-800 space-y-2">
-          <label class="text-xs text-slate-400 block font-semibold">Compartir o Cargar Perfil:</label>
-          <div class="flex gap-2">
-            <button onclick="exportProfileData()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-xs font-bold text-slate-300">
-              <i class="fa-solid fa-share-nodes"></i> Copiar Código para Compartir
-            </button>
-          </div>
-          <div class="flex gap-2 pt-1">
-            <input type="text" id="import-code-input" placeholder="Pegar código de otro perfil aquí..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-            <button onclick="importProfileData()" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white">
-              Cargar Perfil
-            </button>
-          </div>
-        </div>
+    <!-- CAMBIAR COLOR DE TEMA -->
+    <section class="card space-y-3 border theme-accent-border">
+      <h3 class="font-bold text-slate-200 text-xs flex items-center gap-2">
+        <i class="fa-solid fa-palette theme-accent-text"></i> Personalizar Color Visual:
+      </h3>
+      <div class="flex gap-4 justify-start items-center">
+        <button onclick="setAppTheme('#22c55e')" class="w-8 h-8 rounded-full bg-green-500 border-2 border-white hover:scale-110 transition" title="Verde"></button>
+        <button onclick="setAppTheme('#3b82f6')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white hover:scale-110 transition" title="Azul"></button>
+        <button onclick="setAppTheme('#a855f7')" class="w-8 h-8 rounded-full bg-purple-500 border-2 border-white hover:scale-110 transition" title="Violeta"></button>
+        <button onclick="setAppTheme('#ec4899')" class="w-8 h-8 rounded-full bg-pink-500 border-2 border-white hover:scale-110 transition" title="Rosa"></button>
+        <button onclick="setAppTheme('#f97316')" class="w-8 h-8 rounded-full bg-orange-500 border-2 border-white hover:scale-110 transition" title="Naranja"></button>
+        <button onclick="setAppTheme('#06b6d4')" class="w-8 h-8 rounded-full bg-cyan-500 border-2 border-white hover:scale-110 transition" title="Cian"></button>
       </div>
     </section>
 
-    <!-- SELECTOR DE DÍA DE LA SEMANA (7 DÍAS) -->
+    <!-- SELECTOR DE DÍA DE LA SEMANA -->
     <section class="card space-y-2">
       <div class="flex justify-between items-center">
-        <span class="text-xs font-semibold text-slate-400">Selecciona el día de registro:</span>
+        <span class="text-xs font-semibold text-slate-400">Selecciona el día a registrar:</span>
         <span class="text-xs theme-accent-text font-bold" id="current-day-label">Lunes</span>
       </div>
       <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold" id="day-buttons">
-        <button onclick="selectDay('Lunes')" class="day-btn py-2 theme-accent-bg text-slate-900 rounded-lg">Lun</button>
-        <button onclick="selectDay('Martes')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Mar</button>
-        <button onclick="selectDay('Miércoles')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Mié</button>
-        <button onclick="selectDay('Jueves')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Jue</button>
-        <button onclick="selectDay('Viernes')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Vie</button>
-        <button onclick="selectDay('Sábado')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Sáb</button>
-        <button onclick="selectDay('Domingo')" class="day-btn py-2 bg-slate-800 rounded-lg text-slate-400">Dom</button>
+        <button onclick="selectDay('Lunes')" id="btn-Lunes" class="day-btn py-2.5 theme-accent-bg text-slate-900 rounded-lg">Lun</button>
+        <button onclick="selectDay('Martes')" id="btn-Martes" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Mar</button>
+        <button onclick="selectDay('Miércoles')" id="btn-Miércoles" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Mié</button>
+        <button onclick="selectDay('Jueves')" id="btn-Jueves" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Jue</button>
+        <button onclick="selectDay('Viernes')" id="btn-Viernes" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Vie</button>
+        <button onclick="selectDay('Sábado')" id="btn-Sábado" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Sáb</button>
+        <button onclick="selectDay('Domingo')" id="btn-Domingo" class="day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400">Dom</button>
       </div>
     </section>
 
-    <!-- DASHBOARD PRINCIPAL Y BARRA DE PROGRESO GENERAL -->
+    <!-- PROGRESO GENERAL Y BOTÓN DE MOTIVACIÓN -->
     <section class="card bg-gradient-to-r from-slate-800 to-slate-900 border theme-accent-border space-y-3">
       <div class="flex justify-between items-center">
         <h2 class="text-lg font-bold text-slate-200" id="today-header">Hoy: Lunes</h2>
         <span class="text-xs px-2.5 py-1 bg-slate-800 theme-accent-text rounded-full font-bold" id="overall-percentage-text">0% Completado 💚</span>
       </div>
       <div class="w-full bg-slate-700 h-4 rounded-full overflow-hidden">
-        <div id="overall-progress-bar" class="theme-accent-bg h-full transition-all duration-500" style="width: 0%;"></div>
+        <div id="overall-progress-bar" class="theme-accent-bg h-full transition-all duration-300" style="width: 0%;"></div>
       </div>
+      <button onclick="shareProgress()" class="w-full mt-2 py-2 theme-accent-bg text-slate-900 font-bold rounded-lg text-xs flex items-center justify-center gap-2 hover:opacity-90 transition">
+        <i class="fa-solid fa-paper-plane"></i> Enviar Mi Avance a Mis Amigos
+      </button>
     </section>
 
     <!-- ENERGÍA Y DESCANSO -->
@@ -170,59 +133,49 @@
           <span>¿Cómo te sientes hoy? (Energía)</span>
           <span id="energy-val" class="font-bold text-yellow-400">50%</span>
         </label>
-        <input type="range" id="energy-range" min="0" max="100" value="50" class="w-full mt-1 accent-yellow-400" oninput="updateEnergy(this.value)">
+        <input type="range" id="energy-range" min="0" max="100" value="50" class="w-full mt-2 accent-yellow-400 cursor-pointer" oninput="updateEnergy(this.value)">
       </div>
       <div>
         <label class="text-xs text-slate-400 block mb-1">Horas de descanso/sueño:</label>
-        <input type="number" id="sleep-hours" placeholder="Ej: 8 hrs" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-200" oninput="saveCurrentData()">
+        <input type="number" id="sleep-hours" placeholder="Ej: 8" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-slate-200 focus:outline-none focus:border-slate-500" oninput="saveCurrentData()">
       </div>
     </section>
 
-    <!-- RUTINA DE ENTRENAMIENTO Y EDITAR EJERCICIOS -->
+    <!-- RUTINA DE ENTRENAMIENTO -->
     <section class="card space-y-4">
-      <div class="flex justify-between items-center">
-        <h3 class="font-bold text-slate-200 flex items-center gap-2">
-          <i class="fa-solid fa-dumbbell theme-accent-text"></i> Rutina del Día
-        </h3>
-        <select id="workout-days-target" class="bg-slate-800 text-xs p-1.5 rounded border border-slate-700 text-slate-300" onchange="saveCurrentData()">
-          <option value="3">Meta: 3 Días/sem</option>
-          <option value="4" selected>Meta: 4 Días/sem</option>
-          <option value="5">Meta: 5 Días/sem</option>
-        </select>
-      </div>
+      <h3 class="font-bold text-slate-200 flex items-center gap-2">
+        <i class="fa-solid fa-dumbbell theme-accent-text"></i> Rutina del Día
+      </h3>
 
       <!-- ENTRADA EN CALOR -->
       <div class="p-3 bg-slate-800/80 rounded-xl space-y-1 border border-orange-500/20">
         <span class="text-xs font-bold text-orange-400">🔥 Entrada en Calor:</span>
-        <input type="text" id="warmup-input" value="10 min Movilidad articular + 2 vueltas de 15 Saltos de tijera y 10 Sentadillas libres." class="w-full bg-transparent text-xs text-slate-300 border-b border-slate-700 focus:outline-none" oninput="saveCurrentData()">
+        <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular + 10 min cinta" class="w-full bg-transparent text-xs text-slate-300 border-b border-slate-700 focus:outline-none py-1" oninput="saveCurrentData()">
       </div>
 
-      <!-- LISTA DE EJERCICIOS EDITABLES -->
-      <div class="space-y-3" id="exercise-list">
-        <!-- Renderizado dinámicamente -->
-      </div>
-
-      <!-- FORMULARIO PARA AGREGAR NUEVO EJERCICIO -->
-      <div class="p-3 bg-slate-800/60 rounded-xl border border-slate-700 space-y-3">
-        <span class="text-xs font-bold theme-accent-text block"><i class="fa-solid fa-plus-circle"></i> Agregar Nuevo Ejercicio</span>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <input type="text" id="new-ex-name" placeholder="Nombre (Ej: Estocadas)" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-          <input type="text" id="new-ex-reps" placeholder="Detalle (Ej: 4x12)" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-          <select id="new-ex-series" class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
-            <option value="3">3 Series</option>
-            <option value="4" selected>4 Series</option>
-            <option value="5">5 Series</option>
-          </select>
+      <!-- CAMPOS DIRECTOS DE EJERCICIO -->
+      <div class="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-3">
+        <span class="text-xs font-bold theme-accent-text block"><i class="fa-solid fa-pen-to-square"></i> Registro de Ejercicio Principal</span>
+        <div>
+          <label class="text-[11px] text-slate-400">Nombre del Ejercicio:</label>
+          <input type="text" id="ex-name" placeholder="Ej: Sentadillas / Sentadilla Búlgara" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 mt-0.5" oninput="saveCurrentData()">
         </div>
-        <button onclick="addExercise()" class="w-full py-2 theme-accent-bg text-slate-900 rounded-lg text-xs font-bold hover:opacity-90 transition">
-          + Agregar Ejercicio a la Lista
-        </button>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[11px] text-slate-400">Cantidad / Repeticiones:</label>
+            <input type="text" id="ex-reps" placeholder="Ej: 12 repeticiones" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 mt-0.5" oninput="saveCurrentData()">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Series:</label>
+            <input type="text" id="ex-series" placeholder="Ej: 4 series" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 mt-0.5" oninput="saveCurrentData()">
+          </div>
+        </div>
       </div>
 
-      <!-- REGISTRO PARA DÍAS DE NO FUERZA / CARDIO -->
+      <!-- DÍA DE DESCANSO O CARDIO -->
       <div>
-        <label class="text-xs text-slate-400 block mb-1">Si fue día de descanso o cardio alternativo, registra tu actividad:</label>
-        <input type="text" id="rest-cardio-note" placeholder="Ej: Hoy caminé 5km / Anduve en bici 30 min / Reposo absoluto" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs text-slate-200" oninput="saveCurrentData()">
+        <label class="text-xs text-slate-400 block mb-1">Si fue día de descanso o cardio alternativo, escríbelo aquí:</label>
+        <input type="text" id="rest-cardio-note" placeholder="Ej: Caminata 5km / Reposo total / Yoga" class="w-full bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-xs text-slate-200 focus:outline-none" oninput="saveCurrentData()">
       </div>
     </section>
 
@@ -233,44 +186,44 @@
       </h3>
 
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center">
+        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-1')">
           <span>Desayuno</span>
-          <div class="circle-checkbox meal-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div id="meal-1" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center">
+        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-2')">
           <span>Almuerzo</span>
-          <div class="circle-checkbox meal-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div id="meal-2" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center">
+        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-3')">
           <span>Merienda</span>
-          <div class="circle-checkbox meal-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div id="meal-3" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
-        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center">
+        <div class="p-3 bg-slate-800 rounded-xl flex justify-between items-center cursor-pointer" onclick="toggleCircleById('meal-4')">
           <span>Cena</span>
-          <div class="circle-checkbox meal-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+          <div id="meal-4" class="circle-checkbox meal-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
         </div>
       </div>
 
       <div class="space-y-2 pt-2 border-t border-slate-800">
         <span class="text-xs font-semibold text-slate-400">💊 Medicamentos / Suplementos:</span>
         <div class="grid grid-cols-3 gap-2 text-xs">
-          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1">
+          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1 cursor-pointer" onclick="toggleCircleById('med-1')">
             <span>Mañana</span>
-            <div class="circle-checkbox mx-auto med-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+            <div id="med-1" class="circle-checkbox mx-auto med-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
           </div>
-          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1">
+          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1 cursor-pointer" onclick="toggleCircleById('med-2')">
             <span>Tarde</span>
-            <div class="circle-checkbox mx-auto med-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+            <div id="med-2" class="circle-checkbox mx-auto med-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
           </div>
-          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1">
+          <div class="p-2 bg-slate-800 rounded-xl text-center space-y-1 cursor-pointer" onclick="toggleCircleById('med-3')">
             <span>Noche</span>
-            <div class="circle-checkbox mx-auto med-check" onclick="toggleCircle(this)"><i class="fa-solid fa-check text-xs hidden"></i></div>
+            <div id="med-3" class="circle-checkbox mx-auto med-check"><i class="fa-solid fa-check text-xs hidden"></i></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- HIDRATACIÓN EN VASOS -->
+    <!-- HIDRATACIÓN DIBUJADA EN VASOS -->
     <section class="card space-y-3">
       <div class="flex justify-between items-center">
         <h3 class="font-bold text-slate-200 flex items-center gap-2">
@@ -278,72 +231,68 @@
         </h3>
         <span class="text-xs text-cyan-400 font-bold" id="water-count">0 / 8 vasos</span>
       </div>
-      <div class="flex justify-between items-center pt-2">
-        <button onclick="addWater(-1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-bold text-lg">-</button>
-        <div class="flex gap-1.5 items-center" id="water-glasses"></div>
-        <button onclick="addWater(1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-bold text-lg">+</button>
+      <p class="text-[11px] text-slate-400">Toca los vasos para marcarlos o desmarcarlos:</p>
+      
+      <div class="grid grid-cols-4 sm:grid-cols-8 gap-3 pt-2" id="glasses-container">
+        <!-- Renderizado JS -->
       </div>
     </section>
 
-    <!-- DATOS DE AUTOR/USUARIO Y MEDIDAS CORPORALES -->
+    <!-- CONFIGURACIÓN DE PERFIL Y MEDIDAS -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
-        <i class="fa-solid fa-ruler-combined text-purple-400"></i> Datos y Medidas Corporales
+        <i class="fa-solid fa-id-card text-purple-400"></i> Mi Perfil y Medidas Corporales
       </h3>
       <div class="grid grid-cols-2 gap-3 text-xs">
-        <div>
-          <label class="text-slate-400">Nombre de Usuario</label>
-          <input type="text" id="user-name" value="Tamara Nunia" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="updateProfileNameFromInput()">
+        <div class="col-span-2">
+          <label class="text-slate-400">Tu Nombre o Apodo (para compartir):</label>
+          <input type="text" id="user-name" value="Tamara Nunia" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1 font-bold" oninput="updateUserName(this.value)">
         </div>
         <div>
           <label class="text-slate-400">Altura (cm)</label>
-          <input type="number" id="user-height" value="165" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <input type="number" id="user-height" placeholder="165" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
         </div>
         <div>
           <label class="text-slate-400">Peso Actual (kg)</label>
-          <input type="number" id="user-weight" value="65" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <input type="number" id="user-weight" placeholder="65" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
         </div>
         <div>
           <label class="text-slate-400">Pecho / Caderas (cm)</label>
-          <input type="number" id="measure-chest" value="90" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <input type="number" id="measure-chest" placeholder="90" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
         </div>
         <div>
           <label class="text-slate-400">Cintura (cm)</label>
-          <input type="number" id="measure-waist" value="70" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
-        </div>
-        <div>
-          <label class="text-slate-400">Brazos / Piernas (cm)</label>
-          <input type="number" id="measure-limbs" value="30" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
+          <input type="number" id="measure-waist" placeholder="70" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-slate-200 mt-1" oninput="saveCurrentData()">
         </div>
       </div>
     </section>
 
-    <!-- ESTADO DE ÁNIMO Y 3 AGRADECIMIENTOS -->
+    <!-- ESTADO DE ÁNIMO Y CIERRE -->
     <section class="card space-y-4">
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
         <i class="fa-solid fa-heart text-pink-400"></i> Estado de Ánimo y Cierre
       </h3>
       <div>
-        <label class="text-xs text-slate-400 block mb-2">Selecciona tu ánimo final:</label>
+        <label class="text-xs text-slate-400 block mb-2">Selecciona tu estado de ánimo de hoy:</label>
         <div class="flex justify-between text-2xl" id="mood-selector">
-          <button onclick="selectMood('😁', this)" class="mood-btn p-2 rounded-xl bg-slate-800">😁</button>
-          <button onclick="selectMood('🙂', this)" class="mood-btn p-2 rounded-xl bg-slate-800">🙂</button>
-          <button onclick="selectMood('😐', this)" class="mood-btn p-2 rounded-xl bg-slate-800">😐</button>
-          <button onclick="selectMood('😓', this)" class="mood-btn p-2 rounded-xl bg-slate-800">😓</button>
-          <button onclick="selectMood('😴', this)" class="mood-btn p-2 rounded-xl bg-slate-800">😴</button>
+          <button onclick="selectMood('😁', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😁</button>
+          <button onclick="selectMood('🙂', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">🙂</button>
+          <button onclick="selectMood('😐', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😐</button>
+          <button onclick="selectMood('😓', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😓</button>
+          <button onclick="selectMood('😴', this)" class="mood-btn p-2 rounded-xl bg-slate-800 transition">😴</button>
         </div>
       </div>
 
       <div class="space-y-2">
         <label class="text-xs text-slate-400">✨ 3 Cosas por las que agradeces hoy:</label>
-        <input type="text" id="thanks-1" placeholder="1. Mi salud y energía" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
-        <input type="text" id="thanks-2" placeholder="2. Cumplir con mis metas del día" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
-        <input type="text" id="thanks-3" placeholder="3. Compartir mi avance" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
+        <input type="text" id="thanks-1" placeholder="1. Mi salud" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
+        <input type="text" id="thanks-2" placeholder="2. Mi entrenamiento" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
+        <input type="text" id="thanks-3" placeholder="3. Mi descanso" class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs" oninput="saveCurrentData()">
       </div>
 
       <div>
         <label class="text-xs text-slate-400">Notas u observaciones adicionales:</label>
-        <textarea id="daily-notes" placeholder="Escribe aquí cualquier pensamiento sobre tu jornada..." class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs mt-1 h-16" oninput="saveCurrentData()"></textarea>
+        <textarea id="daily-notes" placeholder="Escribe aquí pensamientos de tu jornada..." class="w-full bg-slate-800 border border-slate-700 p-2 rounded-lg text-xs mt-1 h-16" oninput="saveCurrentData()"></textarea>
       </div>
     </section>
 
@@ -352,4 +301,72 @@
       <h3 class="font-bold text-slate-200 flex items-center gap-2">
         <i class="fa-solid fa-chart-line theme-accent-text"></i> Avance Semanal
       </h3>
-      <div class="relative w-full
+      <div class="relative w-full h-64">
+        <canvas id="weeklyChart"></canvas>
+      </div>
+    </section>
+
+    <!-- FOOTER DE AUTORÍA Y COPYRIGHT -->
+    <section class="card bg-slate-900 border border-slate-800 text-center space-y-2">
+      <p class="text-xs text-slate-300 font-semibold flex items-center justify-center gap-2">
+        <i class="fa-solid fa-shield-halved theme-accent-text"></i>
+        <span>Aplicación Creada por Tamara Nunia</span>
+      </p>
+      <p class="text-[10px] text-slate-500 leading-relaxed">
+        © 2026 Tamara Nunia. Todos los derechos reservados.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- LÓGICA JAVASCRIPT COMPLETA E INTERACTIVA -->
+  <script>
+    let currentDay = 'Lunes';
+    let selectedMood = '';
+    let chartInstance = null;
+    let activeThemeColor = '#22c55e';
+    let waterGlasses = [false, false, false, false, false, false, false, false];
+
+    function setAppTheme(colorHex) {
+      activeThemeColor = colorHex;
+      document.documentElement.style.setProperty('--theme-color', colorHex);
+      document.documentElement.style.setProperty('--theme-border', colorHex + '66');
+      localStorage.setItem('fitLife_themeColor', colorHex);
+      updateChart();
+    }
+
+    function selectDay(day) {
+      currentDay = day;
+      document.getElementById('current-day-label').innerText = day;
+      document.getElementById('today-header').innerText = `Hoy: ${day}`;
+
+      document.querySelectorAll('.day-btn').forEach(btn => {
+        btn.className = 'day-btn py-2.5 bg-slate-800 rounded-lg text-slate-400';
+      });
+
+      const activeBtn = document.getElementById(`btn-${day}`);
+      if(activeBtn) {
+        activeBtn.className = 'day-btn py-2.5 theme-accent-bg text-slate-900 rounded-lg font-bold';
+      }
+
+      loadDayData();
+    }
+
+    function renderGlasses() {
+      const container = document.getElementById('glasses-container');
+      container.innerHTML = '';
+
+      let count = 0;
+      waterGlasses.forEach((isFilled, idx) => {
+        if(isFilled) count++;
+        const div = document.createElement('div');
+        div.className = 'flex flex-col items-center glass-svg';
+        div.onclick = () => toggleGlass(idx);
+
+        const fillColor = isFilled ? '#06b6d4' : '#334155';
+        const strokeColor = isFilled ? '#22d3ee' : '#64748b';
+
+        div.innerHTML = `
+          <svg width="40" height="52" viewBox="0 0 40 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 8 L10 46 C10 48 12 50 15 50 L25 50 C28 50 30 48 30 46 L34 8 Z" fill="${fillColor}" stroke="${strokeColor}" stroke-width="2"/>
+            <ellipse cx="20" cy="8" rx="14" ry="3" stroke="${strokeColor}" stroke-width="2" fill="${isFilled ? '#06b6d4' : '#
