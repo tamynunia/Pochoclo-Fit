@@ -9,7 +9,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FitLife App - Tamara Nunia</title>
+  <title>Mi Reto Interactivo - Tamara Nunia</title>
   <style>
     :root {
       --accent: #22c55e;
@@ -321,7 +321,7 @@
 
   <header>
     <div>
-      <div class="brand-title">⚡ FitLife <span class="badge">By Tamara Nunia</span></div>
+      <div class="brand-title">⚡ Mi Reto Interactivo <span class="badge">By Tamara Nunia</span></div>
       <div class="subtitle" id="user-display-name">Perfil: Tamara Nunia</div>
     </div>
     <button class="share-btn" onclick="shareProgress()">Compartir</button>
@@ -345,7 +345,7 @@
     <!-- SELECTOR DE DÍAS -->
     <div class="card">
       <div style="display:flex; justify-between; align-items:center;">
-        <span style="font-size:0.8rem; color:var(--text-muted);">Seleccionar día:</span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">Día del Reto:</span>
         <span id="current-day-title" style="font-size:0.85rem; font-weight:bold; color:var(--accent)">Lunes</span>
       </div>
       <div class="days-grid">
@@ -368,7 +368,7 @@
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progress-fill"></div>
       </div>
-      <button class="action-btn" onclick="shareProgress()">Enviar Mi Avance por WhatsApp / Chat</button>
+      <button class="action-btn" onclick="shareProgress()">Enviar Mi Avance del Reto</button>
     </div>
 
     <!-- ENERGÍA Y SUEÑO -->
@@ -389,19 +389,19 @@
 
     <!-- RUTINA Y EJERCICIOS -->
     <div class="card">
-      <div class="card-title">🏋️‍♀️ Rutina de Ejercicio</div>
+      <div class="card-title">🏋️‍♀️ Meta / Ejercicio del Día</div>
       <div style="margin-bottom:10px;">
-        <label style="font-size:0.75rem; color:var(--text-muted);">Entrada en calor:</label>
+        <label style="font-size:0.75rem; color:var(--text-muted);">Calentamiento / Entrada:</label>
         <input type="text" id="warmup-input" placeholder="Ej: Movilidad articular 10 min" oninput="saveData()">
       </div>
       <div style="margin-bottom:10px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">Ejercicio Principal:</label>
-        <input type="text" id="ex-name-input" placeholder="Ej: Sentadilla búlgara" oninput="saveData()">
+        <input type="text" id="ex-name-input" placeholder="Ej: Sentadillas" oninput="saveData()">
       </div>
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
         <div>
           <label style="font-size:0.75rem; color:var(--text-muted);">Repeticiones:</label>
-          <input type="text" id="ex-reps-input" placeholder="Ej: 12" oninput="saveData()">
+          <input type="text" id="ex-reps-input" placeholder="Ej: 15" oninput="saveData()">
         </div>
         <div>
           <label style="font-size:0.75rem; color:var(--text-muted);">Series:</label>
@@ -412,22 +412,22 @@
 
     <!-- COMIDAS -->
     <div class="card">
-      <div class="card-title">🥗 Comidas del Día</div>
+      <div class="card-title">🥗 Hábitos y Alimentación</div>
       <div class="interactive-grid-2">
         <div class="toggle-box" id="meal-desayuno" onclick="toggleItem('meal-desayuno')">
-          <span style="font-size:0.8rem;">Desayuno</span>
+          <span style="font-size:0.8rem;">Desayuno Sana</span>
           <div class="check-circle">✓</div>
         </div>
         <div class="toggle-box" id="meal-almuerzo" onclick="toggleItem('meal-almuerzo')">
-          <span style="font-size:0.8rem;">Almuerzo</span>
+          <span style="font-size:0.8rem;">Almuerzo Bal.</span>
           <div class="check-circle">✓</div>
         </div>
         <div class="toggle-box" id="meal-merienda" onclick="toggleItem('meal-merienda')">
-          <span style="font-size:0.8rem;">Merienda</span>
+          <span style="font-size:0.8rem;">Merienda Sal.</span>
           <div class="check-circle">✓</div>
         </div>
         <div class="toggle-box" id="meal-cena" onclick="toggleItem('meal-cena')">
-          <span style="font-size:0.8rem;">Cena</span>
+          <span style="font-size:0.8rem;">Cena Ligera</span>
           <div class="check-circle">✓</div>
         </div>
       </div>
@@ -435,7 +435,7 @@
 
     <!-- MEDICAMENTOS -->
     <div class="card">
-      <div class="card-title">💊 Medicamentos / Suplementos</div>
+      <div class="card-title">💊 Tareas / Suplementos</div>
       <div class="interactive-grid-3">
         <div class="toggle-box" id="med-manana" onclick="toggleItem('med-manana')" style="flex-direction:column; gap:6px;">
           <span style="font-size:0.75rem;">Mañana</span>
@@ -458,14 +458,12 @@
         <div class="card-title" style="margin:0;">💧 Consumo de Agua</div>
         <span id="water-count-text" style="font-size:0.8rem; color:#06b6d4; font-weight:bold;">0 / 8 vasos</span>
       </div>
-      <div class="glasses-grid" id="glasses-container">
-        <!-- Generado por JS -->
-      </div>
+      <div class="glasses-grid" id="glasses-container"></div>
     </div>
 
     <!-- PERFIL Y MEDIDAS -->
     <div class="card">
-      <div class="card-title">👤 Perfil y Medidas</div>
+      <div class="card-title">👤 Registro de Perfil</div>
       <div style="margin-bottom:8px;">
         <label style="font-size:0.75rem; color:var(--text-muted);">Tu Nombre / Apodo:</label>
         <input type="text" id="user-name-input" value="Tamara Nunia" oninput="updateProfileName(this.value)">
@@ -484,7 +482,7 @@
 
     <!-- ESTADO DE ÁNIMO -->
     <div class="card">
-      <div class="card-title">✨ Estado de Ánimo de Hoy</div>
+      <div class="card-title">✨ Estado de Ánimo del Día</div>
       <div class="mood-grid">
         <div class="mood-item" id="mood-😁" onclick="selectMood('😁')">😁</div>
         <div class="mood-item" id="mood-🙂" onclick="selectMood('🙂')">🙂</div>
@@ -496,10 +494,8 @@
 
     <!-- GRÁFICO SEMANAL NATIVO -->
     <div class="card">
-      <div class="card-title">📊 Cumplimiento Semanal</div>
-      <div class="chart-container" id="chart-container">
-        <!-- Renderizado por JS -->
-      </div>
+      <div class="card-title">📊 Cumplimiento Semanal del Reto</div>
+      <div class="chart-container" id="chart-container"></div>
     </div>
 
   </main>
@@ -625,3 +621,4 @@
         document.getElementById('energy-range').value = data.energy || 50;
         document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
         document.getElementById('sleep-input').value = data.sleep || '';
+        document.getElementById('warmu
