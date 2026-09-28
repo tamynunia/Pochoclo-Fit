@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pochoclo-Fit | Tamara Nunia</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --primary: #10b981;
@@ -13,7 +14,8 @@
       --card-border: #232d42;
       --text: #f3f4f6;
       --text-muted: #9ca3af;
-      --accent-blue: #3b82f6;
+      --accent-blue: #38bdf8;
+      --accent-pink: #f43f5e;
     }
 
     * {
@@ -101,7 +103,6 @@
       padding-bottom: 10px;
     }
 
-    /* PROFILE CARD */
     .profile-info {
       display: flex;
       align-items: center;
@@ -121,7 +122,6 @@
       color: #fff;
     }
 
-    /* DAYS SELECTOR */
     .days-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -148,12 +148,11 @@
       font-weight: 700;
     }
 
-    /* WATER TRACKER */
     .water-counter {
       text-align: center;
       font-size: 2rem;
       font-weight: 800;
-      color: #38bdf8;
+      color: var(--accent-blue);
       margin: 10px 0;
     }
 
@@ -179,11 +178,10 @@
     }
 
     .glass-btn.active {
-      background-color: rgba(56, 189, 248, 0.2);
-      border-color: #38bdf8;
+      background-color: rgba(56, 189, 248, 0.25);
+      border-color: var(--accent-blue);
     }
 
-    /* TOGGLE LISTS */
     .toggle-list {
       display: flex;
       flex-direction: column;
@@ -224,7 +222,6 @@
       color: #000;
     }
 
-    /* INPUTS & RANGES */
     .input-group {
       display: flex;
       flex-direction: column;
@@ -236,7 +233,7 @@
       color: var(--text-muted);
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"], input[type="number"], textarea {
       width: 100%;
       background-color: var(--bg);
       border: 1px solid var(--card-border);
@@ -245,6 +242,11 @@
       border-radius: 8px;
       font-size: 0.85rem;
       outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
     }
 
     input[type="range"] {
@@ -264,11 +266,6 @@
       transition: opacity 0.2s;
     }
 
-    .btn-action:hover {
-      opacity: 0.9;
-    }
-
-    /* MOOD SELECTOR */
     .mood-row {
       display: flex;
       justify-content: space-between;
@@ -287,8 +284,13 @@
     }
 
     .mood-btn.active {
-      border-color: #f43f5e;
+      border-color: var(--accent-pink);
       background-color: rgba(244, 63, 94, 0.2);
+    }
+
+    .chart-container {
+      max-width: 1200px;
+      margin: 20px auto 0 auto;
     }
 
     footer {
@@ -308,7 +310,6 @@
       <div class="brand-title">🍿 Pochoclo-Fit</div>
       <span class="badge">Reto Interactivo</span>
     </div>
-    <button class="btn-action" id="share-btn" style="width: auto; padding: 8px 16px;">Compartir Avance</button>
   </header>
 
   <div class="dashboard-grid">
@@ -320,7 +321,7 @@
         <div class="profile-info">
           <div class="avatar">TN</div>
           <div>
-            <h3 style="font-size: 1rem;" id="profile-name-display">Tamara Nunia</h3>
+            <h3 style="font-size: 1rem;">Tamara Nunia</h3>
             <span style="font-size: 0.8rem; color: var(--text-muted);">Usuario Activo</span>
           </div>
         </div>
@@ -342,7 +343,7 @@
       <div class="card">
         <div class="card-header">
           <span>💧 Hidratación</span>
-          <span id="water-count-text" style="color: #38bdf8;">0/8 vasos</span>
+          <span id="water-count-text" style="color: var(--accent-blue);">0/8 vasos</span>
         </div>
         <div class="water-counter" id="water-big-count">0.0 L</div>
         <div class="glasses-grid" id="glasses-container"></div>
@@ -354,24 +355,13 @@
     <div style="display: flex; flex-direction: column; gap: 20px;">
 
       <div class="card">
-        <div class="card-header">🥗 Hábitos Saludables</div>
+        <div class="card-header">🥗 Comidas y 💊 Medicamentos</div>
         <div class="toggle-list">
-          <div class="toggle-item" id="meal-desayuno">
-            <span>Desayuno Equilibrado</span>
-            <div class="checkbox">✓</div>
-          </div>
-          <div class="toggle-item" id="meal-almuerzo">
-            <span>Almuerzo Saludable</span>
-            <div class="checkbox">✓</div>
-          </div>
-          <div class="toggle-item" id="meal-merienda">
-            <span>Merienda Nutritiva</span>
-            <div class="checkbox">✓</div>
-          </div>
-          <div class="toggle-item" id="meal-cena">
-            <span>Cena Ligera</span>
-            <div class="checkbox">✓</div>
-          </div>
+          <div class="toggle-item" id="meal-desayuno"><span>Desayuno Equilibrado</span><div class="checkbox">✓</div></div>
+          <div class="toggle-item" id="meal-almuerzo"><span>Almuerzo Saludable</span><div class="checkbox">✓</div></div>
+          <div class="toggle-item" id="meal-merienda"><span>Merienda Nutritiva</span><div class="checkbox">✓</div></div>
+          <div class="toggle-item" id="meal-cena"><span>Cena Ligera</span><div class="checkbox">✓</div></div>
+          <div class="toggle-item" id="meds-taken"><span>💊 Toma de Medicamentos / Suplementos</span><div class="checkbox">✓</div></div>
         </div>
       </div>
 
@@ -414,13 +404,17 @@
       </div>
 
       <div class="card">
-        <div class="card-header">✨ Estado de Ánimo</div>
+        <div class="card-header">✨ Ánimo y Agradecimiento</div>
         <div class="mood-row">
           <div class="mood-btn" data-mood="😁">😁</div>
           <div class="mood-btn" data-mood="🙂">🙂</div>
           <div class="mood-btn" data-mood="😐">😐</div>
           <div class="mood-btn" data-mood="😓">😓</div>
           <div class="mood-btn" data-mood="😴">😴</div>
+        </div>
+        <div class="input-group" style="margin-top: 10px;">
+          <label>Notas de Agradecimiento:</label>
+          <textarea id="thanks-input" placeholder="¿Por qué estás agradecida hoy?"></textarea>
         </div>
       </div>
 
@@ -432,6 +426,14 @@
 
   </div>
 
+  <!-- GRÁFICO DE HISTORIAL DE LA SEMANA -->
+  <div class="chart-container">
+    <div class="card">
+      <div class="card-header">📊 Historial Semanal de Agua (Litros)</div>
+      <canvas id="weeklyChart" height="100"></canvas>
+    </div>
+  </div>
+
   <footer>
     <p>© Copyright Tamara Nunia - Pochoclo Fit. Todos los derechos reservados.</p>
   </footer>
@@ -441,6 +443,9 @@
       let activeDay = 'Lunes';
       let glassesState = Array(8).fill(false);
       let selectedMood = '';
+      let weeklyChart;
+
+      const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
       function changeDay(day) {
         activeDay = day;
@@ -464,16 +469,17 @@
             glassesState[i] = !glassesState[i];
             renderGlasses();
             saveData();
+            updateChart();
           });
           container.appendChild(btn);
         });
 
         document.getElementById('water-count-text').innerText = `${count}/8 vasos`;
-        document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(1)} L`;
+        document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(2)} L`;
       }
 
       function saveData() {
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena'];
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'meds-taken'];
         const toggleStates = {};
         toggles.forEach(id => {
           const el = document.getElementById(id);
@@ -489,6 +495,7 @@
           exName: document.getElementById('ex-name-input').value,
           exSeries: document.getElementById('ex-series-input').value,
           exReps: document.getElementById('ex-reps-input').value,
+          thanks: document.getElementById('thanks-input').value,
         };
 
         localStorage.setItem('pochoclo_data_' + activeDay, JSON.stringify(data));
@@ -497,7 +504,7 @@
       function loadData() {
         const raw = localStorage.getItem('pochoclo_data_' + activeDay);
         const data = raw ? JSON.parse(raw) : null;
-        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena'];
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'meds-taken'];
 
         if (data) {
           glassesState = data.glasses || Array(8).fill(false);
@@ -508,6 +515,7 @@
           document.getElementById('ex-name-input').value = data.exName || '';
           document.getElementById('ex-series-input').value = data.exSeries || '';
           document.getElementById('ex-reps-input').value = data.exReps || '';
+          document.getElementById('thanks-input').value = data.thanks || '';
 
           if (data.toggles) {
             toggles.forEach(id => {
@@ -524,6 +532,7 @@
           document.getElementById('ex-name-input').value = '';
           document.getElementById('ex-series-input').value = '';
           document.getElementById('ex-reps-input').value = '';
+          document.getElementById('thanks-input').value = '';
           toggles.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.remove('active');
@@ -540,7 +549,47 @@
         });
       }
 
-      // ASIGNACIÓN DE EVENTOS
+      function initChart() {
+        const ctx = document.getElementById('weeklyChart').getContext('2d');
+        weeklyChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            datasets: [{
+              label: 'Litros de Agua Consumidos',
+              data: getWeeklyWaterData(),
+              backgroundColor: '#38bdf8',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            scales: {
+              y: { beginAtZero: true, max: 2.5 }
+            }
+          }
+        });
+      }
+
+      function getWeeklyWaterData() {
+        return daysList.map(day => {
+          const raw = localStorage.getItem('pochoclo_data_' + day);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const count = (parsed.glasses || []).filter(Boolean).length;
+            return count * 0.25;
+          }
+          return 0;
+        });
+      }
+
+      function updateChart() {
+        if (weeklyChart) {
+          weeklyChart.data.datasets[0].data = getWeeklyWaterData();
+          weeklyChart.update();
+        }
+      }
+
+      // EVENTOS
       document.querySelectorAll('.day-btn').forEach(btn => {
         btn.addEventListener('click', () => changeDay(btn.getAttribute('data-day')));
       });
@@ -565,15 +614,18 @@
         saveData();
       });
 
-      ['sleep-input', 'ex-name-input', 'ex-series-input', 'ex-reps-input'].forEach(id => {
+      ['sleep-input', 'ex-name-input', 'ex-series-input', 'ex-reps-input', 'thanks-input'].forEach(id => {
         document.getElementById(id).addEventListener('input', saveData);
       });
 
       document.getElementById('send-btn').addEventListener('click', () => {
+        saveData();
+        updateChart();
         alert('¡Avance guardado con éxito!');
       });
 
       changeDay('Lunes');
+      initChart();
     });
   </script>
 </body>
