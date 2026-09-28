@@ -98,14 +98,19 @@
       color: #000;
       border: none;
       border-radius: 50%;
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+    }
+
+    .btn-add-profile:hover {
+      transform: scale(1.1);
     }
 
     .dashboard-grid {
@@ -211,7 +216,8 @@
       font-size: 1.5rem;
       cursor: pointer;
       text-align: center;
-      transition: transform 0.1s ease;
+      transition: transform 0.1s ease, background-color 0.2s;
+      user-select: none;
     }
 
     .glass-btn:active {
@@ -221,6 +227,7 @@
     .glass-btn.active {
       background-color: rgba(56, 189, 248, 0.25);
       border-color: var(--accent-blue);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
     }
 
     .toggle-list {
@@ -370,6 +377,7 @@
       flex: 1;
       margin: 0 4px;
       text-align: center;
+      user-select: none;
     }
 
     .mood-btn.active {
@@ -628,13 +636,18 @@
       function switchProfile(newName) {
         activeUser = newName;
         document.getElementById('user-display-name').innerText = activeUser;
-        const initials = activeUser.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-        document.getElementById('user-avatar').innerText = initials || 'U';
+        
+        // Generar iniciales para el avatar
+        const parts = activeUser.trim().split(' ');
+        let initials = parts[0][0] || 'U';
+        if (parts.length > 1) initials += parts[1][0];
+        document.getElementById('user-avatar').innerText = initials.toUpperCase();
+        
         loadData();
       }
 
       document.getElementById('add-profile-btn').addEventListener('click', () => {
-        const name = prompt('Escribe el nombre del nuevo amigo/a para crear su perfil:');
+        const name = prompt('Escribe el nombre de tu amigo/a para crear su perfil:');
         if (name && name.trim()) {
           const cleanName = name.trim();
           if (!profilesList.includes(cleanName)) {
@@ -691,12 +704,4 @@
         container.innerHTML = '';
 
         exercisesList.forEach((ex, index) => {
-          const item = document.createElement('div');
-          item.className = 'dynamic-item' + (ex.done ? ' done' : '');
-          
-          item.innerHTML = `
-            <span style="cursor: pointer;"><strong>${ex.name}</strong> (${ex.series} series x ${ex.reps})</span>
-            <button class="delete-item-btn">✕</button>
-          `;
-
-          item.qu
+          const item = d
