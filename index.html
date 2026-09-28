@@ -3,30 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PochocloFit - Mi Rutina Interactiva</title>
+  <title>PochocloFit - Tamara Nunia</title>
   <link rel="manifest" href="manifest.json">
+  <!-- Chart.js para el gráfico de progreso -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg: #0b0f17;
+      --card-bg: #161e2e;
       --primary: #10b981;
       --primary-hover: #059669;
       --text: #f8fafc;
       --subtext: #94a3b8;
-      --border: #334155;
+      --border: #243044;
+      --accent: #f59e0b;
+    }
+
+    /* Temas de color */
+    body.theme-purple {
+      --primary: #a855f7;
+      --primary-hover: #9333ea;
+    }
+    body.theme-pink {
+      --primary: #ec4899;
+      --primary-hover: #db2777;
+    }
+    body.theme-blue {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
+      min-height: 100vh;
     }
 
-    .container {
+    .app-container {
       width: 100%;
       max-width: 480px;
       padding: 20px;
@@ -38,15 +56,31 @@
 
     .header {
       text-align: center;
+      position: relative;
     }
 
-    .logo {
-      font-size: 50px;
+    .logo-container {
+      font-size: 48px;
+      line-height: 1;
+      margin-bottom: 5px;
     }
 
     .title {
-      font-size: 26px;
-      margin: 5px 0 0 0;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0;
+      background: linear-gradient(135deg, var(--text) 60%, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--subtext);
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 600;
     }
 
     .card {
@@ -54,98 +88,160 @@
       border-radius: 16px;
       padding: 20px;
       border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
     }
 
-    .user-section {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    label {
-      font-size: 14px;
-      color: var(--subtext);
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background-color: #0f172a;
-      color: var(--text);
+    .card-title {
       font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    .add-box {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    button {
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: none;
-      background-color: var(--primary);
-      color: #000;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    button:hover {
-      background-color: var(--primary-hover);
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 15px 0 0 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    li {
+      font-weight: 700;
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background-color: #0f172a;
-      padding: 12px 15px;
-      border-radius: 8px;
+      color: var(--text);
+    }
+
+    /* Themes Selector */
+    .theme-selector {
+      display: flex;
+      gap: 10px;
+    }
+
+    .theme-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+    }
+
+    .theme-dot:hover {
+      transform: scale(1.15);
+    }
+
+    .dot-green { background-color: #10b981; }
+    .dot-purple { background-color: #a855f7; }
+    .dot-pink { background-color: #ec4899; }
+    .dot-blue { background-color: #3b82f6; }
+
+    /* Inputs y botones */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--subtext);
+      font-weight: 500;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background-color: #0b0f17;
+      color: var(--text);
+      font-size: 15px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: var(--primary);
+    }
+
+    .add-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      background-color: var(--primary);
+      color: #0b0f17;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    /* Task List */
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #0b0f17;
+      padding: 12px 14px;
+      border-radius: 10px;
       border: 1px solid var(--border);
     }
 
-    .task-info {
+    .task-left {
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
+      flex: 1;
     }
 
-    input[type="checkbox"] {
+    .checkbox {
       width: 20px;
       height: 20px;
       accent-color: var(--primary);
       cursor: pointer;
     }
 
-    .completed {
+    .task-text {
+      font-size: 15px;
+      transition: color 0.2s;
+    }
+
+    .task-text.completed {
       text-decoration: line-through;
       color: var(--subtext);
     }
 
-    .btn-delete {
-      background-color: transparent;
-      color: #ef4444;
-      font-size: 18px;
-      padding: 4px 8px;
+    .btn-icon {
+      background: none;
       border: none;
+      color: #ef4444;
+      font-size: 16px;
       cursor: pointer;
+      padding: 4px 8px;
+      opacity: 0.7;
+    }
+
+    .btn-icon:hover {
+      opacity: 1;
+    }
+
+    /* Canvas Chart */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 200px;
     }
 
     .footer {
@@ -159,79 +255,132 @@
 </head>
 <body>
 
-  <div class="container">
+  <div class="app-container">
+    <!-- Header principal con branding Tamara Nunia -->
     <div class="header">
-      <div class="logo">🍿🏋️‍♀️</div>
+      <div class="logo-container">🍿🏋️‍♀️</div>
       <h1 class="title">PochocloFit</h1>
+      <div class="subtitle" id="userBrand">By Tamara Nunia</div>
     </div>
 
-    <!-- Personalización -->
-    <div class="card user-section">
-      <label for="userName">Tu nombre / Perfil:</label>
-      <input type="text" id="userName" placeholder="Ingresá tu nombre..." oninput="saveUserData()">
-    </div>
-
-    <!-- Lista interactiva de ejercicios -->
+    <!-- Personalización de usuario y selector de tema -->
     <div class="card">
-      <label>Mis Ejercicios y Tareas:</label>
-      <div class="add-box">
-        <input type="text" id="newTask" placeholder="Ej: 10 Sentadillas, Beber agua...">
-        <button onclick="addTask()">Agregar</button>
+      <div class="card-title">
+        <span>Perfil & Apariencia</span>
+        <div class="theme-selector">
+          <div class="theme-dot dot-green" onclick="setTheme('green')"></div>
+          <div class="theme-dot dot-purple" onclick="setTheme('purple')"></div>
+          <div class="theme-dot dot-pink" onclick="setTheme('pink')"></div>
+          <div class="theme-dot dot-blue" onclick="setTheme('blue')"></div>
+        </div>
       </div>
-
-      <ul id="taskList"></ul>
+      <div class="input-group">
+        <label for="userNameInput">Nombre del atleta / usuario:</label>
+        <input type="text" id="userNameInput" placeholder="Tu nombre..." oninput="updateProfileName()">
+      </div>
     </div>
 
-    <div class="footer" id="footerText">
-      Copyright © 2026 Tamara Nunia. Todos los derechos reservados.
+    <!-- Lista interactiva de rutina -->
+    <div class="card">
+      <div class="card-title">Rutina de Hoy</div>
+      <div class="add-row">
+        <input type="text" id="newTaskInput" placeholder="Ej: 15 Sentadillas, Crunches...">
+        <button class="btn-primary" onclick="addTask()">Agregar</button>
+      </div>
+      <ul class="task-list" id="taskList" style="margin-top: 15px;"></ul>
+    </div>
+
+    <!-- Gráfico interactivo de progreso semanal (Chart.js) -->
+    <div class="card">
+      <div class="card-title">Progreso Semanal (Minutos de entreno)</div>
+      <div class="add-row" style="margin-bottom: 15px;">
+        <input type="number" id="minsInput" placeholder="Minutos entrenados hoy...">
+        <button class="btn-primary" onclick="addProgress()">Registrar</button>
+      </div>
+      <div class="chart-container">
+        <canvas id="progressChart"></canvas>
+      </div>
+    </div>
+
+    <div class="footer">
+      PochocloFit © 2026 Tamara Nunia. Todos los derechos reservados.
     </div>
   </div>
 
   <script>
+    // Configuración y Estado Inicial
+    let profileName = localStorage.getItem('pochoclo_name') || 'Tamara Nunia';
+    let currentTheme = localStorage.getItem('pochoclo_theme') || 'green';
     let tasks = JSON.parse(localStorage.getItem('pochoclo_tasks')) || [
-      { text: "Sentadillas con peso (3x10)", done: false },
-      { text: "Press de banca (3x8)", done: true },
-      { text: "Tomar 2L de agua", done: false }
+      { text: "Sentadillas profundas (3x12)", done: false },
+      { text: "Estocadas (3x10 por pierna)", done: true },
+      { text: "Hidratación 2L de agua", done: false }
     ];
+    let weeklyData = JSON.parse(localStorage.getItem('pochoclo_weekly')) || [20, 35, 45, 30, 50, 0, 0];
 
-    document.getElementById('userName').value = localStorage.getItem('pochoclo_user') || 'Tamara Nunia';
+    // Cargar perfil y tema
+    document.getElementById('userNameInput').value = profileName;
+    applyTheme(currentTheme);
+    updateBrandText();
 
-    function saveUserData() {
-      const name = document.getElementById('userName').value;
-      localStorage.setItem('pochoclo_user', name);
+    function updateProfileName() {
+      profileName = document.getElementById('userNameInput').value.trim() || 'Tamara Nunia';
+      localStorage.setItem('pochoclo_name', profileName);
+      updateBrandText();
     }
 
+    function updateBrandText() {
+      document.getElementById('userBrand').textContent = `By ${profileName}`;
+    }
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      localStorage.setItem('pochoclo_theme', theme);
+      applyTheme(theme);
+      updateChartColor();
+    }
+
+    function applyTheme(theme) {
+      document.body.className = '';
+      if (theme !== 'green') {
+        document.body.classList.add(`theme-${theme}`);
+      }
+    }
+
+    // Lógica de Tareas / Rutina
     function renderTasks() {
       const list = document.getElementById('taskList');
       list.innerHTML = '';
       tasks.forEach((task, index) => {
         const li = document.createElement('li');
-        
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'task-info';
-        infoDiv.onclick = () => toggleTask(index);
+        li.className = 'task-item';
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.done;
+        const left = document.createElement('div');
+        left.className = 'task-left';
+        left.onclick = () => toggleTask(index);
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'checkbox';
+        cb.checked = task.done;
 
         const span = document.createElement('span');
+        span.className = 'task-text' + (task.done ? ' completed' : '');
         span.textContent = task.text;
-        if (task.done) span.className = 'completed';
 
-        infoDiv.appendChild(checkbox);
-        infoDiv.appendChild(span);
+        left.appendChild(cb);
+        left.appendChild(span);
 
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn-delete';
-        deleteBtn.innerHTML = '🗑️';
-        deleteBtn.onclick = (e) => {
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-icon';
+        delBtn.innerHTML = '🗑️';
+        delBtn.onclick = (e) => {
           e.stopPropagation();
           deleteTask(index);
         };
 
-        li.appendChild(infoDiv);
-        li.appendChild(deleteBtn);
+        li.appendChild(left);
+        li.appendChild(delBtn);
         list.appendChild(li);
       });
 
@@ -239,10 +388,10 @@
     }
 
     function addTask() {
-      const input = document.getElementById('newTask');
-      const text = input.value.trim();
-      if (text !== '') {
-        tasks.push({ text: text, done: false });
+      const input = document.getElementById('newTaskInput');
+      const val = input.value.trim();
+      if (val !== '') {
+        tasks.push({ text: val, done: false });
         input.value = '';
         renderTasks();
       }
@@ -259,6 +408,59 @@
     }
 
     renderTasks();
+
+    // Lógica del Gráfico Chart.js
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    
+    function getPrimaryColorHex() {
+      const style = getComputedStyle(document.body);
+      return style.getPropertyValue('--primary').trim() || '#10b981';
+    }
+
+    let progressChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+        datasets: [{
+          label: 'Minutos',
+          data: weeklyData,
+          borderColor: getPrimaryColorHex(),
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          borderWidth: 3,
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: { grid: { color: '#243044' }, ticks: { color: '#94a3b8' } },
+          y: { grid: { color: '#243044' }, ticks: { color: '#94a3b8' } }
+        }
+      }
+    });
+
+    function addProgress() {
+      const input = document.getElementById('minsInput');
+      const val = parseInt(input.value);
+      if (!isNaN(val) && val > 0) {
+        // Añadir al día actual (ejemplo suma al último valor no nulo)
+        weeklyData[4] += val; // actualiza viernes/día actual
+        localStorage.setItem('pochoclo_weekly', JSON.stringify(weeklyData));
+        progressChart.update();
+        input.value = '';
+      }
+    }
+
+    function updateChartColor() {
+      const newColor = getPrimaryColorHex();
+      progressChart.data.datasets[0].borderColor = newColor;
+      progressChart.update();
+    }
   </script>
 </body>
 </html>
