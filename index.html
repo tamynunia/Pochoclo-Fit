@@ -697,4 +697,472 @@
       let weeklyChart;
 
       const daysList = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-      let profi
+      let profilesList = ['Tamara Nunia'];
+
+      function loadProfiles() {
+        const stored = localStorage.getItem('pochoclo_profiles');
+        if (stored) {
+          profilesList = JSON.parse(stored);
+        } else {
+          localStorage.setItem('pochoclo_profiles', JSON.stringify(profilesList));
+        }
+        renderProfilesSelect();
+      }
+
+      function renderProfilesSelect() {
+        const select = document.getElementById('profile-select');
+        select.innerHTML = '';
+        profilesList.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.innerText = name;
+          if (name === activeUser) opt.selected = true;
+          select.appendChild(opt);
+        });
+      }
+
+      function switchProfile(newName) {
+        activeUser = newName;
+        document.getElementById('user-display-name').innerText = activeUser;
+        
+        const parts = activeUser.trim().split(' ');
+        let initials = parts[0][0] || 'U';
+        if (parts.length > 1) initials += parts[1][0];
+        document.getElementById('user-avatar').innerText = initials.toUpperCase();
+        
+        loadData();
+      }
+
+      document.getElementById('add-profile-btn').addEventListener('click', () => {
+        const name = prompt('Escribe el nombre de tu amigo/a para crear su perfil:');
+        if (name && name.trim()) {
+          const cleanName = name.trim();
+          if (!profilesList.includes(cleanName)) {
+            profilesList.push(cleanName);
+            localStorage.setItem('pochoclo_profiles', JSON.stringify(profilesList));
+            renderProfilesSelect();
+            switchProfile(cleanName);
+          } else {
+            alert('Este perfil ya existe.');
+          }
+        }
+      });
+
+      document.getElementById('profile-select').addEventListener('change', (e) => {
+        switchProfile(e.target.value);
+      });
+
+      function changeDay(day) {
+        activeDay = day;
+        document.querySelectorAll('.day-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-day') === day);
+        });
+        loadData();
+      }
+
+      function renderGlasses() {
+        const container = document.getElementById('glasses-container');
+        container.innerHTML = '';
+        let count = 0;
+
+        glassesState.forEach((isFull, i) => {
+          if (isFull) count++;
+          const btn = document.createElement('div');
+          btn.className = isFull ? 'glass-btn active' : 'glass-btn';
+          btn.innerText = '🥤';
+          btn.addEventListener('click', () => {
+            glassesState[i] = !glassesState[i];
+            renderGlasses();
+            saveData();
+            updateChart();
+          });
+          container.appendChild(btn);
+        });
+
+        document.getElementById('water-count-text').innerText = `${count}/8 vasos`;
+        document.getElementById('water-big-count').innerText = `${(count * 0.25).toFixed(2)} L`;
+      }
+
+      function renderExercises() {
+        const container = document.getElementById('exercise-list');
+        container.innerHTML = '';
+
+        exercisesList.forEach((ex, index) => {
+          const item = document.createElement('div');
+          item.className = 'dynamic-item' + (ex.done ? ' done' : '');
+          
+          item.innerHTML = `
+            <span class="ex-label" style="cursor: pointer; flex-grow: 1;"><strong>${ex.name}</strong> (${ex.series} series x ${ex.reps})</span>
+            <button class="delete-item-btn">✕</button>
+          `;
+
+          item.querySelector('.ex-label').addEventListener('click', () => {
+            exercisesList[index].done = !exercisesList[index].done;
+            renderExercises();
+            saveData();
+          });
+
+          item.querySelector('.delete-item-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            exercisesList.splice(index, 1);
+            renderExercises();
+            saveData();
+          });
+
+          container.appendChild(item);
+        });
+      }
+
+      function renderThanks() {
+        const container = document.getElementById('thanks-list');
+        container.innerHTML = '';
+
+        thanksList.forEach((text, index) => {
+          const item = document.createElement('div');
+          item.className = 'dynamic-item';
+          
+          item.innerHTML = `
+            <span>✨ ${text}</span>
+            <button class="delete-item-btn">✕</button>
+          `;
+
+          item.querySelector('.delete-item-btn').addEventListener('click', () => {
+            thanksList.splice(index, 1);
+            renderThanks();
+            saveData();
+          });
+
+          container.appendChild(item);
+        });
+      }
+
+      function renderFoodList() {
+        const container = document.getElementById('food-list');
+        container.innerHTML = '';
+        let totalCalories = 0;
+
+        foodItemsList.forEach((item, index) => {
+          totalCalories += item.calories;
+          const div = document.createElement('div');
+          div.className = 'dynamic-item';
+          div.innerHTML = `
+            <span><strong>[${item.meal}]</strong> ${item.name} (${item.grams}g) - <strong>${item.calories} kcal</strong></span>
+            <button class="delete-item-btn">✕</button>
+          `;
+
+          div.querySelector('.delete-item-btn').addEventListener('click', () => {
+            foodItemsList.splice(index, 1);
+            renderFoodList();
+            saveData();
+          });
+
+          container.appendChild(div);
+        });
+
+        const goal = parseInt(document.getElementById('calorie-goal-input').value) || 2000;
+        document.getElementById('cal-total-text').innerText = `${totalCalories} / ${goal} kcal`;
+
+        const emojiEl = document.getElementById('cal-emoji-status');
+        if (totalCalories <= goal) {
+          emojiEl.innerText = '😊';
+        } else if (totalCalories <= goal * 1.15) {
+          emojiEl.innerText = '😐';
+        } else if (totalCalories <= goal * 1.30) {
+          emojiEl.innerText = '😮‍💨';
+        } else {
+          emojiEl.innerText = '😡';
+        }
+      }
+
+      function addFoodItem() {
+        const foodSelect = document.getElementById('food-select');
+        const calPer100g = parseFloat(foodSelect.value);
+        const name = foodSelect.options[foodSelect.selectedIndex].text.split('(')[0].trim();
+        const grams = parseFloat(document.getElementById('food-grams-input').value);
+        const meal = document.getElementById('meal-category-select').value;
+
+        if (!grams || grams <= 0) {
+          alert('Por favor, ingresa una cantidad válida en gramos.');
+          return;
+        }
+
+        const calculatedCalories = Math.round((calPer100g * grams) / 100);
+
+        foodItemsList.push({
+          name: name,
+          grams: grams,
+          meal: meal,
+          calories: calculatedCalories
+        });
+
+        document.getElementById('food-grams-input').value = '';
+        renderFoodList();
+        saveData();
+      }
+
+      function saveData() {
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
+        const toggleStates = {};
+        toggles.forEach(id => {
+          const el = document.getElementById(id);
+          toggleStates[id] = el ? el.classList.contains('active') : false;
+        });
+
+        const bodyData = {
+          weight: document.getElementById('body-weight').value,
+          height: document.getElementById('body-height').value,
+          chest: document.getElementById('body-chest').value,
+          waist: document.getElementById('body-waist').value,
+          hip: document.getElementById('body-hip').value,
+          arms: document.getElementById('body-arms').value,
+          thighs: document.getElementById('body-thighs').value
+        };
+
+        const data = {
+          glasses: glassesState,
+          mood: selectedMood,
+          toggles: toggleStates,
+          energy: document.getElementById('energy-range').value,
+          sleep: document.getElementById('sleep-input').value,
+          exercises: exercisesList,
+          thanks: thanksList,
+          body: bodyData,
+          countCalories: countCalories,
+          calorieGoal: document.getElementById('calorie-goal-input').value,
+          foodItems: foodItemsList
+        };
+
+        const key = `pochoclo_data_${activeUser}_${activeDay}`;
+        localStorage.setItem(key, JSON.stringify(data));
+      }
+
+      function loadData() {
+        const key = `pochoclo_data_${activeUser}_${activeDay}`;
+        const raw = localStorage.getItem(key);
+        const data = raw ? JSON.parse(raw) : null;
+        const toggles = ['meal-desayuno', 'meal-almuerzo', 'meal-merienda', 'meal-cena', 'med-manana', 'med-tarde', 'med-noche'];
+
+        if (data) {
+          glassesState = data.glasses || Array(8).fill(false);
+          selectedMood = data.mood || '';
+          exercisesList = data.exercises || [];
+          thanksList = data.thanks || [];
+          foodItemsList = data.foodItems || [];
+          countCalories = !!data.countCalories;
+          calorieGoal = data.calorieGoal || 2000;
+
+          document.getElementById('energy-range').value = data.energy || 50;
+          document.getElementById('energy-val').innerText = (data.energy || 50) + '%';
+          document.getElementById('sleep-input').value = data.sleep || '';
+
+          if (data.toggles) {
+            toggles.forEach(id => {
+              const el = document.getElementById(id);
+              if (el) el.classList.toggle('active', !!data.toggles[id]);
+            });
+          }
+
+          if (data.body) {
+            document.getElementById('body-weight').value = data.body.weight || '';
+            document.getElementById('body-height').value = data.body.height || '';
+            document.getElementById('body-chest').value = data.body.chest || '';
+            document.getElementById('body-waist').value = data.body.waist || '';
+            document.getElementById('body-hip').value = data.body.hip || '';
+            document.getElementById('body-arms').value = data.body.arms || '';
+            document.getElementById('body-thighs').value = data.body.thighs || '';
+          }
+        } else {
+          glassesState = Array(8).fill(false);
+          selectedMood = '';
+          exercisesList = [];
+          thanksList = [];
+          foodItemsList = [];
+          countCalories = false;
+          calorieGoal = 2000;
+
+          document.getElementById('energy-range').value = 50;
+          document.getElementById('energy-val').innerText = '50%';
+          document.getElementById('sleep-input').value = '';
+          toggles.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active');
+          });
+
+          document.getElementById('body-weight').value = '';
+          document.getElementById('body-height').value = '';
+          document.getElementById('body-chest').value = '';
+          document.getElementById('body-waist').value = '';
+          document.getElementById('body-hip').value = '';
+          document.getElementById('body-arms').value = '';
+          document.getElementById('body-thighs').value = '';
+        }
+
+        document.getElementById('calorie-goal-input').value = calorieGoal;
+        const calOptionEl = document.getElementById('toggle-calories-option');
+        const calSectionEl = document.getElementById('calorie-section');
+
+        calOptionEl.classList.toggle('active', countCalories);
+        calSectionEl.style.display = countCalories ? 'flex' : 'none';
+
+        document.getElementById('ex-name-input').value = '';
+        document.getElementById('ex-series-input').value = '';
+        document.getElementById('ex-reps-input').value = '';
+        document.getElementById('thanks-text-input').value = '';
+
+        renderGlasses();
+        renderExercises();
+        renderThanks();
+        renderFoodList();
+        updateMoodUI();
+        updateChart();
+      }
+
+      function updateMoodUI() {
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.getAttribute('data-mood') === selectedMood);
+        });
+      }
+
+      function initChart() {
+        const ctx = document.getElementById('weeklyChart').getContext('2d');
+        weeklyChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            datasets: [{
+              label: 'Litros de Agua Consumidos',
+              data: getWeeklyWaterData(),
+              backgroundColor: '#38bdf8',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true, max: 2.5 }
+            }
+          }
+        });
+      }
+
+      function getWeeklyWaterData() {
+        return daysList.map(day => {
+          const raw = localStorage.getItem(`pochoclo_data_${activeUser}_${day}`);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const count = (parsed.glasses || []).filter(Boolean).length;
+            return count * 0.25;
+          }
+          return 0;
+        });
+      }
+
+      function updateChart() {
+        if (weeklyChart) {
+          weeklyChart.data.datasets[0].data = getWeeklyWaterData();
+          weeklyChart.update();
+        }
+      }
+
+      function addExercise() {
+        const nameInput = document.getElementById('ex-name-input');
+        const seriesInput = document.getElementById('ex-series-input');
+        const repsInput = document.getElementById('ex-reps-input');
+
+        const name = nameInput.value.trim();
+        const series = seriesInput.value.trim();
+        const reps = repsInput.value.trim();
+
+        if (name !== '') {
+          exercisesList.push({
+            name: name,
+            series: series || '1',
+            reps: reps || '10',
+            done: false
+          });
+
+          nameInput.value = '';
+          seriesInput.value = '';
+          repsInput.value = '';
+
+          renderExercises();
+          saveData();
+        }
+      }
+
+      function addThanks() {
+        const input = document.getElementById('thanks-text-input');
+        const text = input.value.trim();
+
+        if (text !== '') {
+          thanksList.push(text);
+          input.value = '';
+          renderThanks();
+          saveData();
+        }
+      }
+
+      document.getElementById('add-ex-btn').addEventListener('click', addExercise);
+      document.getElementById('add-thanks-btn').addEventListener('click', addThanks);
+      document.getElementById('add-food-btn').addEventListener('click', addFoodItem);
+
+      document.getElementById('thanks-text-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addThanks();
+      });
+
+      document.querySelectorAll('.day-btn').forEach(btn => {
+        btn.addEventListener('click', () => changeDay(btn.getAttribute('data-day')));
+      });
+
+      document.querySelectorAll('.toggle-item').forEach(item => {
+        if (item.id === 'toggle-calories-option') return;
+        item.addEventListener('click', () => {
+          item.classList.toggle('active');
+          saveData();
+        });
+      });
+
+      document.getElementById('toggle-calories-option').addEventListener('click', function() {
+        countCalories = !countCalories;
+        this.classList.toggle('active', countCalories);
+        document.getElementById('calorie-section').style.display = countCalories ? 'flex' : 'none';
+        saveData();
+      });
+
+      document.getElementById('calorie-goal-input').addEventListener('input', () => {
+        renderFoodList();
+        saveData();
+      });
+
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedMood = btn.getAttribute('data-mood');
+          updateMoodUI();
+          saveData();
+        });
+      });
+
+      document.getElementById('energy-range').addEventListener('input', (e) => {
+        document.getElementById('energy-val').innerText = e.target.value + '%';
+        saveData();
+      });
+
+      const autoSaveInputs = ['sleep-input', 'body-weight', 'body-height', 'body-chest', 'body-waist', 'body-hip', 'body-arms', 'body-thighs'];
+      autoSaveInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', saveData);
+      });
+
+      document.getElementById('send-btn').addEventListener('click', () => {
+        saveData();
+        updateChart();
+        alert('¡Avance guardado con éxito!');
+      });
+
+      loadProfiles();
+      switchProfile('Tamara Nunia');
+      initChart();
+    });
+  </script>
+</body>
+</html>
